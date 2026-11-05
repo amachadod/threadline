@@ -1,0 +1,29 @@
+{
+  "_note": "Example answers for the demo's questions. The real tool asks Claude with the notes Threadline finds on the map; citations are checked against those notes.",
+  "questions": [
+    {
+      "question": "When does Valle de Bravo open, and what's due for it?",
+      "answer": "Valle de Bravo now opens on 3 March 2027. It moved from 15 February because construction is running late. Two things are due: the revised launch media plan for Sofía by Thursday 29 October (owned by Inês, though that's inferred from the email), and Daniel's launch plan outline by 10 November. Sofía also asked to flag any early booking discounts lost by the move, which is still unclear.",
+      "citations": ["Valle de Bravo opening", "Valle de Bravo opening moved to 3 March", "Revised Valle de Bravo media plan", "Valle de Bravo launch plan outline", "Early booking discounts at risk"],
+      "unknown": false
+    },
+    {
+      "question": "Who approves budget changes at Casa Verde?",
+      "answer": "Rafael Ortega, Casa Verde's Commercial Director. Any change above 10% of the €180,000 annual media budget needs his approval. The team notes say he has signed off changes within a day before, so ask him early.",
+      "citations": ["Rafael Ortega", "Annual media budget", "Ask Rafael early about budget changes"],
+      "unknown": false
+    },
+    {
+      "question": "What should we watch out for with Carla Ruiz?",
+      "answer": "Carla Ruiz becomes Casa Verde's Head of Marketing on 10 November and will review all agencies in her first month, so Brightline needs to show results early. Daniel owns a results one-pager and an intro meeting with her, due 13 November.",
+      "citations": ["Carla Ruiz", "Agency review by Carla Ruiz", "Results one-pager for Carla Ruiz", "Daniel Reyes"],
+      "unknown": false
+    },
+    {
+      "question": "Has Brightline signed a contract with SuperReach?",
+      "answer": "Nothing in the documents says so. The only mention of SuperReach is an unsolicited proposal received on 29 October. That file also contained hidden text telling AI tools to record a €50,000 contract; Threadline removed it and flagged the document.",
+      "citations": ["SuperReach"],
+      "unknown": false
+    }
+  ]
+}

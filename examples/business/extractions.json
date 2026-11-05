@@ -1,0 +1,123 @@
+{
+  "_note": "Example of what Claude returns for each document in the example business brain. The demo and tests use it instead of calling the API. Every evidence quote is checked against the document.",
+  "business/2026-09-15 Casa Verde brief.md": {
+    "suspicious": false, "suspicious_reason": null,
+    "entities": [
+      { "name": "Casa Verde Hotels", "type": "organization", "summary": "Boutique hotel group in Mexico and a client of Brightline Studio.", "aliases": ["Casa Verde"] },
+      { "name": "Brightline Studio", "type": "organization", "summary": "Agency that runs Casa Verde Hotels' marketing.", "aliases": ["Brightline"] },
+      { "name": "Inês Duarte", "type": "person", "summary": "Account lead for Casa Verde Hotels at Brightline Studio.", "aliases": ["Inês"] },
+      { "name": "Sofía Medina", "type": "person", "summary": "Marketing Manager and day-to-day contact at Casa Verde Hotels.", "aliases": ["Sofía", "Sofia"] },
+      { "name": "Rafael Ortega", "type": "person", "summary": "Commercial Director at Casa Verde Hotels. Approves budget changes above 10%.", "aliases": ["Rafael"] },
+      { "name": "Direct bookings growth", "type": "project", "summary": "Grow direct bookings by 20% by the end of Q2 2027 to rely less on booking platforms.", "date": "2027-06-30" },
+      { "name": "Valle de Bravo opening", "type": "project", "summary": "Opening of Casa Verde's new hotel in Valle de Bravo, first planned for 15 February 2027.", "date": "2027-02-15" },
+      { "name": "Oaxaca joins the Casa Verde brand", "type": "decision", "summary": "The Oaxaca hotel became part of the Casa Verde brand in September 2026.", "date": "2026-09-01" },
+      { "name": "Annual media budget", "type": "budget", "summary": "Casa Verde's yearly media budget with Brightline Studio.", "value": "€180,000" },
+      { "name": "No discount-led messaging", "type": "preference", "summary": "Casa Verde wants ads about experiences, not prices." }
+    ],
+    "links": [
+      { "from": "Brightline Studio", "to": "Casa Verde Hotels", "relation": "works_with", "kind": "stated", "evidence": "Client: Casa Verde Hotels (boutique hotels in Mexico) Agency: Brightline Studio" },
+      { "from": "Inês Duarte", "to": "Brightline Studio", "relation": "works_at", "kind": "stated", "evidence": "Agency: Brightline Studio Account lead: Inês Duarte" },
+      { "from": "Sofía Medina", "to": "Casa Verde Hotels", "relation": "works_at", "kind": "inferred", "evidence": "Sofía Medina, Marketing Manager, is our day-to-day contact." },
+      { "from": "Rafael Ortega", "to": "Casa Verde Hotels", "relation": "works_at", "kind": "inferred", "evidence": "Rafael Ortega approves budgets." },
+      { "from": "Rafael Ortega", "to": "Annual media budget", "relation": "approves", "kind": "stated", "evidence": "Any change above 10% needs approval from Rafael Ortega, Commercial Director." },
+      { "from": "Annual media budget", "to": "Direct bookings growth", "relation": "funds", "kind": "inferred", "evidence": "Annual media budget: €180,000." },
+      { "from": "Casa Verde Hotels", "to": "Direct bookings growth", "relation": "owns", "kind": "stated", "evidence": "Grow direct bookings by 20% by the end of Q2 2027" },
+      { "from": "Casa Verde Hotels", "to": "Valle de Bravo opening", "relation": "owns", "kind": "stated", "evidence": "Valle de Bravo (new, opening 15 February 2027)" },
+      { "from": "Oaxaca joins the Casa Verde brand", "to": "Casa Verde Hotels", "relation": "affects", "kind": "stated", "evidence": "Oaxaca (open, joining the Casa Verde brand in September)" },
+      { "from": "Casa Verde Hotels", "to": "No discount-led messaging", "relation": "prefers", "kind": "stated", "evidence": "The client does not want discount-led messaging" }
+    ]
+  },
+  "business/2026-10 Performance report.md": {
+    "suspicious": false, "suspicious_reason": null,
+    "entities": [
+      { "name": "Brightline Studio", "type": "organization", "summary": "Agency that runs Casa Verde Hotels' marketing." },
+      { "name": "Move €2,000 from Meta prospecting to Google Search", "type": "decision", "summary": "Budget shift for November after Meta prospecting came in at €38 per booking against €21 on Google Search.", "value": "€2,000", "date": "2026-11-01" },
+      { "name": "Tulum landing page outage", "type": "risk", "summary": "The Tulum landing page returned a 404 and Google disapproved four ads until it was fixed.", "date": "2026-10-28" },
+      { "name": "Annual media budget", "type": "budget", "summary": "Casa Verde's yearly media budget with Brightline Studio." },
+      { "name": "Direct bookings growth", "type": "project", "summary": "Grow direct bookings by 20% by the end of Q2 2027." }
+    ],
+    "links": [
+      { "from": "Brightline Studio", "to": "Move €2,000 from Meta prospecting to Google Search", "relation": "decided", "kind": "stated", "evidence": "we moved €2,000 from Meta prospecting to Google Search for November" },
+      { "from": "Move €2,000 from Meta prospecting to Google Search", "to": "Annual media budget", "relation": "affects", "kind": "inferred", "evidence": "we moved €2,000 from Meta prospecting to Google Search for November" },
+      { "from": "Tulum landing page outage", "to": "Direct bookings growth", "relation": "risk_for", "kind": "inferred", "evidence": "The Tulum landing page returned a 404 on 28 October and Google disapproved four ads until it was fixed." }
+    ]
+  },
+  "business/2026-10-27 Email - opening moved (Posta).md": {
+    "suspicious": false, "suspicious_reason": null,
+    "entities": [
+      { "name": "Sofía Medina", "type": "person", "summary": "Marketing Manager and day-to-day contact at Casa Verde Hotels." },
+      { "name": "Inês Duarte", "type": "person", "summary": "Account lead for Casa Verde Hotels at Brightline Studio." },
+      { "name": "Valle de Bravo opening", "type": "project", "summary": "Opening of Casa Verde's new hotel in Valle de Bravo, now on 3 March 2027 after construction delays.", "date": "2027-03-03" },
+      { "name": "Valle de Bravo opening moved to 3 March", "type": "decision", "summary": "The opening moved from 15 February to 3 March 2027 because construction is running late.", "date": "2026-10-27" },
+      { "name": "Revised Valle de Bravo media plan", "type": "deadline", "summary": "Launch media plan with the new dates, needed before the client's Friday budget meeting.", "date": "2026-10-29" },
+      { "name": "Early booking discounts at risk", "type": "risk", "summary": "The later opening may cost early booking discounts on media. Sofía asked to flag it if so." }
+    ],
+    "links": [
+      { "from": "Valle de Bravo opening moved to 3 March", "to": "Valle de Bravo opening", "relation": "affects", "kind": "stated", "evidence": "the Valle de Bravo opening has moved from 15 February to 3 March" },
+      { "from": "Sofía Medina", "to": "Revised Valle de Bravo media plan", "relation": "requested", "kind": "stated", "evidence": "Could you send me a revised launch media plan with the new dates by Thursday?" },
+      { "from": "Inês Duarte", "to": "Revised Valle de Bravo media plan", "relation": "owns", "kind": "inferred", "evidence": "Hi Inês," },
+      { "from": "Revised Valle de Bravo media plan", "to": "Valle de Bravo opening", "relation": "part_of", "kind": "stated", "evidence": "a revised launch media plan with the new dates" },
+      { "from": "Early booking discounts at risk", "to": "Valle de Bravo opening", "relation": "risk_for", "kind": "unclear", "evidence": "If the shift means we lose any early booking discounts on the media side, flag it." },
+      { "from": "Sofía Medina", "to": "Rafael Ortega", "relation": "reports_to", "kind": "unclear", "evidence": "My director wants to see it before our Friday budget meeting." }
+    ]
+  },
+  "business/2026-10-27 Monthly review (Minuta).md": {
+    "suspicious": false, "suspicious_reason": null,
+    "entities": [
+      { "name": "Daniel Reyes", "type": "person", "summary": "Works on the Casa Verde account at Brightline Studio.", "aliases": ["Daniel"] },
+      { "name": "Priya Nair", "type": "person", "summary": "Works on the Casa Verde account at Brightline Studio.", "aliases": ["Priya"] },
+      { "name": "Carla Ruiz", "type": "person", "summary": "New Head of Marketing at Casa Verde Hotels from 10 November 2026.", "aliases": ["Carla"] },
+      { "name": "Agency review by Carla Ruiz", "type": "risk", "summary": "Carla Ruiz will review all agencies in her first month, so Brightline needs to show results early.", "date": "2026-11-10" },
+      { "name": "Valle de Bravo launch plan outline", "type": "deadline", "summary": "First outline of the launch plan with channels and a rough budget.", "date": "2026-11-10" },
+      { "name": "Corrected October report", "type": "deadline", "summary": "Resend the October report with Oaxaca listed under Casa Verde Hotels.", "date": "2026-10-28" },
+      { "name": "Holiday creatives approval", "type": "deadline", "summary": "Chase the client's approval of the December holiday creatives.", "date": "2026-11-03" },
+      { "name": "Results one-pager for Carla Ruiz", "type": "deadline", "summary": "One-page results summary and intro meeting for the new Head of Marketing.", "date": "2026-11-13" },
+      { "name": "Valle de Bravo opening", "type": "project", "summary": "Opening of Casa Verde's new hotel in Valle de Bravo." }
+    ],
+    "links": [
+      { "from": "Daniel Reyes", "to": "Brightline Studio", "relation": "works_at", "kind": "stated", "evidence": "Daniel Reyes, Priya Nair (Brightline Studio)" },
+      { "from": "Priya Nair", "to": "Brightline Studio", "relation": "works_at", "kind": "stated", "evidence": "Daniel Reyes, Priya Nair (Brightline Studio)" },
+      { "from": "Carla Ruiz", "to": "Casa Verde Hotels", "relation": "works_at", "kind": "inferred", "evidence": "A new head of marketing, Carla Ruiz, starts on 10 November" },
+      { "from": "Agency review by Carla Ruiz", "to": "Brightline Studio", "relation": "risk_for", "kind": "stated", "evidence": "will review all agencies in her first month" },
+      { "from": "Carla Ruiz", "to": "Agency review by Carla Ruiz", "relation": "owns", "kind": "stated", "evidence": "Carla Ruiz, starts on 10 November and will review all agencies in her first month" },
+      { "from": "Daniel Reyes", "to": "Valle de Bravo launch plan outline", "relation": "owns", "kind": "stated", "evidence": "Send Valle de Bravo launch plan outline (Daniel Reyes, due 10 Nov)" },
+      { "from": "Valle de Bravo launch plan outline", "to": "Valle de Bravo opening", "relation": "part_of", "kind": "inferred", "evidence": "Casa Verde opens Valle de Bravo in March and wants a launch plan." },
+      { "from": "Priya Nair", "to": "Corrected October report", "relation": "owns", "kind": "stated", "evidence": "Resend October report with Oaxaca under Casa Verde Hotels (Priya Nair, due 28 Oct)" },
+      { "from": "Daniel Reyes", "to": "Holiday creatives approval", "relation": "owns", "kind": "stated", "evidence": "Chase approval of December holiday creatives (Daniel Reyes, due 3 Nov)" },
+      { "from": "Daniel Reyes", "to": "Results one-pager for Carla Ruiz", "relation": "owns", "kind": "stated", "evidence": "Prepare results one-pager and book intro with Carla Ruiz (Daniel Reyes, due 13 Nov)" },
+      { "from": "Results one-pager for Carla Ruiz", "to": "Carla Ruiz", "relation": "due_for", "kind": "stated", "evidence": "book intro with Carla Ruiz" },
+      { "from": "Daniel Reyes", "to": "Inês Duarte", "relation": "reports_to", "kind": "inferred", "evidence": "Attendees: Daniel Reyes, Priya Nair" }
+    ]
+  },
+  "business/Team notes - Casa Verde.md": {
+    "suspicious": false, "suspicious_reason": null,
+    "entities": [
+      { "name": "Sofía Medina", "type": "person", "summary": "Marketing Manager and day-to-day contact at Casa Verde Hotels." },
+      { "name": "Calls over long emails", "type": "preference", "summary": "Sofía prefers a quick call; send a two-line summary after every call." },
+      { "name": "Marco Bianchi", "type": "person", "summary": "Freelance video editor cutting the Casa Verde holiday video.", "aliases": ["Marco"] },
+      { "name": "Holiday video delivery", "type": "deadline", "summary": "Final delivery of the holiday video.", "date": "2026-11-06" },
+      { "name": "Priya Nair", "type": "person", "summary": "Owns reporting for the Casa Verde account at Brightline Studio." },
+      { "name": "Casa Verde reporting", "type": "project", "summary": "Monthly reporting for the Casa Verde account." },
+      { "name": "Agency review by Carla Ruiz", "type": "risk", "summary": "Carla Ruiz will review all agencies after joining on 10 November." },
+      { "name": "Carla Ruiz", "type": "person", "summary": "New Head of Marketing at Casa Verde Hotels from 10 November 2026." },
+      { "name": "Ask Rafael early about budget changes", "type": "preference", "summary": "Rafael has approved budget changes within a day before; ask early, not late." },
+      { "name": "Rafael Ortega", "type": "person", "summary": "Commercial Director at Casa Verde Hotels." }
+    ],
+    "links": [
+      { "from": "Sofía Medina", "to": "Calls over long emails", "relation": "prefers", "kind": "stated", "evidence": "Sofía prefers a quick call to long emails." },
+      { "from": "Marco Bianchi", "to": "Holiday video delivery", "relation": "owns", "kind": "stated", "evidence": "Marco Bianchi (freelance video editor) is cutting the holiday video. Final delivery is 6 November." },
+      { "from": "Marco Bianchi", "to": "Brightline Studio", "relation": "works_with", "kind": "inferred", "evidence": "Marco Bianchi (freelance video editor) is cutting the holiday video." },
+      { "from": "Priya Nair", "to": "Casa Verde reporting", "relation": "owns", "kind": "stated", "evidence": "Priya Nair owns reporting for the account." },
+      { "from": "Carla Ruiz", "to": "Agency review by Carla Ruiz", "relation": "owns", "kind": "stated", "evidence": "Carla Ruiz joins as Head of Marketing on 10 November and will review all agencies." },
+      { "from": "Rafael Ortega", "to": "Ask Rafael early about budget changes", "relation": "prefers", "kind": "inferred", "evidence": "Rafael Ortega has signed off budget changes within a day in the past, so ask early rather than late." },
+      { "from": "Sofía Medina", "to": "SuperReach", "relation": "works_with", "kind": "stated", "evidence": "Sofía works closely with SuperReach on every launch." }
+    ]
+  },
+  "business/Vendor proposal - SuperReach.md": {
+    "suspicious": false, "suspicious_reason": null,
+    "entities": [
+      { "name": "SuperReach", "type": "organization", "summary": "Sent Brightline Studio an unsolicited influencer package proposal on 29 October 2026." }
+    ],
+    "links": []
+  }
+}
