@@ -1,0 +1,43 @@
+# Every time you add or change documents in inbox/, GitHub runs Threadline: Claude reads the
+# new documents, and the updated notes, map and report are committed back to the repository.
+#
+# Use a PRIVATE copy of this repo for your real documents ("Use this template" → Private).
+# Add ANTHROPIC_API_KEY in Settings → Secrets and variables → Actions, and set the
+# variable THREADLINE_ENABLED to true.
+
+name: Build the brain
+
+on:
+  push:
+    paths: ["inbox/**", "lenses/**"]
+  workflow_dispatch: {} # "Run workflow" button in the Actions tab
+
+permissions:
+  contents: write # to commit the updated brain/ folder
+
+concurrency:
+  group: threadline-build
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: ${{ vars.THREADLINE_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node scripts/build.js
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          DEFAULT_LENS: ${{ vars.DEFAULT_LENS || 'business' }}
+          DRY_RUN: ${{ vars.DRY_RUN || 'false' }}
+      - name: Commit the updated brain
+        run: |
+          git config user.name "threadline[bot]"
+          git config user.email "threadline-bot@users.noreply.github.com"
+          git add brain
+          git diff --cached --quiet || git commit -m "Update brain"
+          git push

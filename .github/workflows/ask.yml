@@ -1,0 +1,30 @@
+# Ask your brain from GitHub: open an issue, add the label "ask", and Threadline replies
+# with an answer and the notes it used. Only questions from the repository owner are answered.
+
+name: Ask the brain
+
+on:
+  issues:
+    types: [opened, labeled]
+
+permissions:
+  contents: read
+  issues: write # to post the answer as a comment
+
+jobs:
+  answer:
+    if: >-
+      ${{ vars.THREADLINE_ENABLED == 'true' &&
+          contains(github.event.issue.labels.*.name, 'ask') &&
+          github.event.issue.user.login == github.repository_owner }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node scripts/ask.js --issue
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
