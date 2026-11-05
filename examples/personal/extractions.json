@@ -1,0 +1,77 @@
+{
+  "_note": "Example of what Claude returns for each document in the example personal brain. The demo and tests use it instead of calling the API. Every evidence quote is checked against the document.",
+  "personal/Coffee with Rui.md": {
+    "suspicious": false, "suspicious_reason": null,
+    "entities": [
+      { "name": "Rui", "type": "person", "summary": "Mentor. Thinks analytics plus account management is a rare mix worth leaning into." },
+      { "name": "Joana Pires", "type": "person", "summary": "Leads growth at a travel startup that is hiring.", "aliases": ["Joana"] },
+      { "name": "Publish two analyses on GitHub", "type": "idea", "summary": "Rui's advice: publish two small analyses on GitHub before applying to analyst roles." },
+      { "name": "Next coffee with Rui", "type": "plan", "summary": "Follow-up meeting with Rui in early December 2026." },
+      { "name": "Príncipe Real", "type": "place", "summary": "Lisbon neighbourhood where the coffee with Rui took place." }
+    ],
+    "links": [
+      { "from": "Rui", "to": "Publish two analyses on GitHub", "relation": "recommended", "kind": "stated", "evidence": "His advice: publish two small analyses on GitHub before applying to analyst roles." },
+      { "from": "Rui", "to": "Joana Pires", "relation": "offered_intro", "kind": "stated", "evidence": "He offered to introduce me to Joana Pires" },
+      { "from": "Next coffee with Rui", "to": "Rui", "relation": "planned_for", "kind": "stated", "evidence": "Next coffee: early December." },
+      { "from": "Rui", "to": "Príncipe Real", "relation": "located_in", "kind": "unclear", "evidence": "22 October 2026, Príncipe Real." }
+    ]
+  },
+  "personal/Course notes - SQL for marketers.md": {
+    "suspicious": false, "suspicious_reason": null,
+    "entities": [
+      { "name": "SQL for Marketers course", "type": "resource", "summary": "Six-week online course started on 5 October 2026. Week 3 covered JOINs.", "date": "2026-10-05" },
+      { "name": "BigQuery", "type": "resource", "summary": "Where GA4 raw events can be exported for free, used for SQL practice." },
+      { "name": "Rebuild an old campaign report in SQL", "type": "idea", "summary": "Portfolio piece: redo one of my old campaign reports in SQL." },
+      { "name": "Learn SQL for campaign analysis", "type": "goal", "summary": "Analyse campaign data independently with SQL by June 2027." },
+      { "name": "Rui", "type": "person", "summary": "Mentor." },
+      { "name": "Publish two analyses on GitHub", "type": "idea", "summary": "Publish two small analyses on GitHub before applying to analyst roles." }
+    ],
+    "links": [
+      { "from": "SQL for Marketers course", "to": "Learn SQL for campaign analysis", "relation": "supports", "kind": "inferred", "evidence": "Online course, 6 weeks. Started 5 October 2026." },
+      { "from": "BigQuery", "to": "SQL for Marketers course", "relation": "part_of", "kind": "stated", "evidence": "GA4 can export raw events to BigQuery for free, which is where I'll practise." },
+      { "from": "Rui", "to": "Rebuild an old campaign report in SQL", "relation": "recommended", "kind": "stated", "evidence": "Rui suggested this." },
+      { "from": "Rebuild an old campaign report in SQL", "to": "Publish two analyses on GitHub", "relation": "part_of", "kind": "inferred", "evidence": "Rebuild one of my old campaign reports in SQL as a portfolio piece." }
+    ]
+  },
+  "personal/Goals 2027.md": {
+    "suspicious": false, "suspicious_reason": null,
+    "entities": [
+      { "name": "Run the Lisbon half marathon", "type": "goal", "summary": "Run the Lisbon half marathon in March 2027.", "date": "2027-03-01" },
+      { "name": "Learn SQL for campaign analysis", "type": "goal", "summary": "Learn SQL well enough to analyse campaign data independently by June 2027.", "date": "2027-06-30" },
+      { "name": "Travel to Japan", "type": "goal", "summary": "Trip to Japan in April 2027.", "date": "2027-04-01" },
+      { "name": "Read one book a month", "type": "goal", "summary": "Reading goal for 2027." },
+      { "name": "Lisbon", "type": "place", "summary": "Home city and the half marathon's location." }
+    ],
+    "links": [
+      { "from": "Run the Lisbon half marathon", "to": "Lisbon", "relation": "located_in", "kind": "stated", "evidence": "Run the Lisbon half marathon in March 2027." }
+    ]
+  },
+  "personal/Japan trip ideas.md": {
+    "suspicious": false, "suspicious_reason": null,
+    "entities": [
+      { "name": "Travel to Japan", "type": "goal", "summary": "Two weeks in Japan in April 2027 for the cherry blossom, about €3,500 including flights.", "value": "€3,500" },
+      { "name": "Japan savings plan", "type": "plan", "summary": "Save €300 a month from November 2026 to cover the trip by April.", "value": "€300/month" },
+      { "name": "Tokyo", "type": "place", "summary": "First stop of the Japan trip." },
+      { "name": "Kyoto", "type": "place", "summary": "Second stop of the Japan trip." }
+    ],
+    "links": [
+      { "from": "Japan savings plan", "to": "Travel to Japan", "relation": "supports", "kind": "stated", "evidence": "Saving €300 a month from November covers it by April." },
+      { "from": "Travel to Japan", "to": "Tokyo", "relation": "located_in", "kind": "stated", "evidence": "Where: Tokyo first, then Kyoto." },
+      { "from": "Travel to Japan", "to": "Kyoto", "relation": "located_in", "kind": "stated", "evidence": "Where: Tokyo first, then Kyoto." }
+    ]
+  },
+  "personal/Training log October.md": {
+    "suspicious": false, "suspicious_reason": null,
+    "entities": [
+      { "name": "Running three times a week", "type": "habit", "summary": "Tuesday, Thursday and Sunday runs." },
+      { "name": "16-week half marathon plan", "type": "plan", "summary": "Running club's training plan. At week 6 of 16 at the end of October 2026." },
+      { "name": "First 14 km run", "type": "milestone", "summary": "Longest run so far.", "date": "2026-10-26" },
+      { "name": "Run the Lisbon half marathon", "type": "goal", "summary": "Run the Lisbon half marathon in March 2027." }
+    ],
+    "links": [
+      { "from": "Running three times a week", "to": "Run the Lisbon half marathon", "relation": "supports", "kind": "inferred", "evidence": "Running three times a week: Tuesday, Thursday, Sunday." },
+      { "from": "16-week half marathon plan", "to": "Run the Lisbon half marathon", "relation": "supports", "kind": "stated", "evidence": "Following my running club's 16-week half marathon plan." },
+      { "from": "First 14 km run", "to": "16-week half marathon plan", "relation": "part_of", "kind": "inferred", "evidence": "Longest run so far: 14 km on 26 October." }
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "_note": "Example answers for the demo's questions. The real tool asks Claude with the notes Threadline finds on the map; citations are checked against those notes.",
+  "questions": [
+    {
+      "question": "What am I doing to get ready for the half marathon?",
+      "answer": "You're running three times a week (Tuesday, Thursday, Sunday) and following your running club's 16-week plan, at week 6 by the end of October. Your longest run so far is 14 km on 26 October. The race is the Lisbon half marathon in March 2027.",
+      "citations": ["Run the Lisbon half marathon", "Running three times a week", "16-week half marathon plan", "First 14 km run"],
+      "unknown": false
+    },
+    {
+      "question": "Who can help me get an analyst job?",
+      "answer": "Rui, your mentor, offered to introduce you to Joana Pires, who leads growth at a travel startup that is hiring. Rui's advice is to publish two small analyses on GitHub first, and rebuilding an old campaign report in SQL could be one of them.",
+      "citations": ["Rui", "Joana Pires", "Publish two analyses on GitHub", "Rebuild an old campaign report in SQL"],
+      "unknown": false
+    },
+    {
+      "question": "How much do I need to save for Japan?",
+      "answer": "About €3,500 including flights, for two weeks in April 2027 (Tokyo, then Kyoto). Saving €300 a month from November covers it by April.",
+      "citations": ["Travel to Japan", "Japan savings plan", "Tokyo", "Kyoto"],
+      "unknown": false
+    },
+    {
+      "question": "What's my budget for the half marathon?",
+      "answer": "Your notes don't mention a budget for the half marathon.",
+      "citations": [],
+      "unknown": true
+    }
+  ]
+}
