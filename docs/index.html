@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Threadline</title>
+<meta name="description" content="Threadline turns your documents into a second brain: linked, Obsidian-ready notes and a map Claude can follow, with every fact traced to its source.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Figtree:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: an evidence board. The map of threads on the left, the note you pulled on the right. One teal thread colour carries every connection. */
+:root{
+  --bg:#f3f4f1; --surface:#ffffff; --ink:#18201f; --muted:#5d6866; --line:#dde2df; --soft:#eef1ee; --board:#f8f9f7;
+  --thread:#0f766e; --thread-soft:#d5efeb; --mark:#fff2b8; --mark-ink:#4a3a00; --warn:#b45309; --bad:#b91c1c;
+  --t1:#0f766e; --t2:#2563eb; --t3:#b45309; --t4:#7c3aed; --t5:#be185d; --t6:#4d7c0f; --t7:#0e7490; --t8:#78716c;
+  --f-display:"Gloock",Georgia,"Times New Roman",serif;
+  --f-body:"Figtree","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"Spline Sans Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1413; --surface:#161d1c; --ink:#e5ece9; --muted:#97a39f; --line:#28322f; --soft:#1c2523; --board:#121918;
+  --thread:#2dd4bf; --thread-soft:#123a36; --mark:#4a3d10; --mark-ink:#ffe8a3; --warn:#f59e0b; --bad:#f87171;
+  --t1:#2dd4bf; --t2:#7aa7ff; --t3:#f0a54a; --t4:#b69cff; --t5:#f47fb6; --t6:#a3d65c; --t7:#5fd4ea; --t8:#b8b0a8; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1413; --surface:#161d1c; --ink:#e5ece9; --muted:#97a39f; --line:#28322f; --soft:#1c2523; --board:#121918;
+  --thread:#2dd4bf; --thread-soft:#123a36; --mark:#4a3d10; --mark-ink:#ffe8a3; --warn:#f59e0b; --bad:#f87171;
+  --t1:#2dd4bf; --t2:#7aa7ff; --t3:#f0a54a; --t4:#b69cff; --t5:#f47fb6; --t6:#a3d65c; --t7:#5fd4ea; --t8:#b8b0a8; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--f-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 56px}
+a{color:var(--thread)}
+:focus-visible{outline:2px solid var(--thread);outline-offset:2px}
+button{font:inherit;color:inherit}
+.wrap{max-width:1240px;margin:0 auto}
+
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:20px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-size:23px;text-decoration:none;color:var(--ink)}
+.brand svg{display:block}
+.toplinks{display:flex;gap:18px;font-size:14px;flex-wrap:wrap}
+.toplinks a{color:var(--muted);text-decoration:none}.toplinks a:hover{color:var(--ink)}
+
+.hero{padding-block:30px 28px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:40px;align-items:end;border-bottom:1px solid var(--line)}
+@media (max-width:860px){.hero{grid-template-columns:minmax(0,1fr);gap:18px}}
+.hero h1{font-family:var(--f-display);font-weight:400;font-size:clamp(2.2rem,5.4vw,4rem);line-height:1.04;margin:0;text-wrap:balance}
+.hero h1 span{color:var(--thread)}
+.hero p{margin:0;color:var(--muted);font-size:16.5px;max-width:56ch;text-wrap:pretty}
+.byline{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-top:14px}
+
+.flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-block:28px 40px;border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden}
+@media (max-width:760px){.flow{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.step{padding:18px;border-right:1px solid var(--line);min-width:0}
+.step:last-child{border-right:0}
+@media (max-width:760px){.step:nth-child(2){border-right:0}.step:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+.step .n{font-family:var(--f-mono);font-size:11px;color:var(--muted);letter-spacing:.08em}
+.step h3{margin:6px 0 4px;font-size:16px}
+.step p{margin:0;font-size:13.5px;color:var(--muted)}
+.tool{display:inline-block;margin-top:10px;font-family:var(--f-mono);font-size:11px;padding:2px 8px;border-radius:999px;background:var(--soft)}
+
+.sec{margin-top:52px}
+.sec-h{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.sec-h h2{margin:0;font-family:var(--f-display);font-weight:400;font-size:clamp(1.5rem,2.8vw,2.1rem);text-wrap:balance}
+.sec-h p{margin:0;color:var(--muted);font-size:14px;max-width:62ch}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;min-width:0}
+
+/* Brain switch + counts */
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.switch{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;background:var(--surface)}
+.switch button{border:0;background:transparent;padding:7px 16px;border-radius:999px;cursor:pointer;font-weight:600;font-size:14px;color:var(--muted)}
+.switch button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.counts{font-family:var(--f-mono);font-size:12px;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap}
+.counts b{color:var(--ink);font-weight:500}
+
+/* Explorer */
+.explorer{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:980px){.explorer{grid-template-columns:minmax(0,1fr)}}
+.mapbox{position:relative;overflow:hidden}
+.mapbox canvas{display:block;width:100%;height:560px;background:var(--board);border-radius:10px 10px 0 0;cursor:grab;touch-action:none}
+@media (max-width:600px){.mapbox canvas{height:420px}}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;padding:10px 14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--c)}
+.ln{width:22px;height:0;border-top:2px solid var(--muted)}
+.ln.inferred{border-top-style:dashed}.ln.unclear{border-top-style:dotted}
+.find{padding:10px 14px;border-top:1px solid var(--line)}
+.find input{width:100%;font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;max-height:96px;overflow:auto}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:3px 10px;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip:hover{border-color:var(--thread)}
+.chip.on{border-color:var(--thread);background:var(--thread-soft)}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12.5px;padding:4px 8px;border-radius:4px;white-space:nowrap;transform:translate(-50%,-140%)}
+
+.note{display:flex;flex-direction:column}
+.tabs{display:flex;gap:4px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.tabs button{border:0;background:transparent;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13.5px;color:var(--muted);font-weight:600}
+.tabs button[aria-selected="true"]{background:var(--soft);color:var(--ink)}
+.notebody{padding:18px 20px;max-height:640px;overflow:auto}
+.notebody h3{font-family:var(--f-display);font-weight:400;font-size:26px;margin:4px 0 6px;line-height:1.15}
+.notebody h4{margin:18px 0 8px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-family:var(--f-mono);font-weight:500}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.pill{font-size:12px;padding:1px 8px;border-radius:999px;border:1px solid var(--line);white-space:nowrap}
+.pill.type{color:var(--c);border-color:color-mix(in srgb,var(--c) 45%,transparent);background:color-mix(in srgb,var(--c) 10%,transparent)}
+.conn{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.conn li{border-left:2px solid var(--thread);padding:2px 0 2px 12px}
+.conn li.inferred{border-left-style:dashed}.conn li.unclear{border-left-style:dotted;border-left-color:var(--warn)}
+.conn .rel{font-size:14px}
+.conn q{display:block;quotes:none;font-size:14px;color:var(--muted);margin-top:4px}
+.kind{font-family:var(--f-mono);font-size:11px;color:var(--warn);margin-left:6px}
+.wl{border:0;background:none;padding:0;color:var(--thread);cursor:pointer;font-weight:600;text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--thread) 35%,transparent);text-underline-offset:3px}
+.wl.doc{font-weight:500}
+.srcs{margin:0;padding-left:18px}
+.yours{margin-top:16px;padding:10px 12px;border:1px dashed var(--line);border-radius:8px;font-size:13.5px;color:var(--muted)}
+pre.md{margin:0;padding:18px 20px;font:12.5px/1.6 var(--f-mono);white-space:pre-wrap;word-wrap:break-word;max-height:640px;overflow:auto}
+.docview{padding:18px 20px;max-height:640px;overflow:auto}
+.docview pre{white-space:pre-wrap;font:14.5px/1.65 var(--f-body);margin:0}
+.docview mark{background:var(--mark);color:var(--mark-ink);border-radius:3px;padding:0 2px}
+.warnbox{border-left:3px solid var(--bad);background:var(--soft);padding:10px 12px;border-radius:0 8px 8px 0;margin-bottom:14px;font-size:14px}
+.warnbox pre{font:12px/1.5 var(--f-mono);margin:8px 0 0;white-space:pre-wrap;color:var(--muted)}
+.back{border:0;background:none;color:var(--muted);cursor:pointer;padding:0;margin-bottom:10px;font-size:13px}
+
+/* Ask */
+.ask{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){.ask{grid-template-columns:minmax(0,1fr)}}
+.qs{display:flex;flex-direction:column;gap:8px}
+.qs button{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:12px 14px;cursor:pointer;font-size:14.5px;font-weight:500}
+.qs button[aria-pressed="true"]{border-color:var(--thread);box-shadow:inset 3px 0 0 var(--thread)}
+.answer{padding:18px 20px}
+.answer .a{font-size:16px;line-height:1.6;margin:0 0 14px;max-width:68ch}
+.answer .lab{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:12px 0 6px}
+.unknown{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid var(--warn);color:var(--warn);margin-bottom:10px}
+
+/* Report */
+.rep{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+@media (max-width:860px){.rep{grid-template-columns:minmax(0,1fr)}}
+.box{padding:16px 18px}
+.box h3{margin:0 0 10px;font-size:15px}
+.box ol,.box ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:14px}
+.box p{margin:0 0 8px;font-size:14px;color:var(--muted)}
+.big{font-family:var(--f-display);font-size:32px;line-height:1;margin-right:6px;color:var(--ink)}
+.num{font-family:var(--f-mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* Lenses */
+.lens{display:grid;grid-template-columns:minmax(0,240px) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:760px){.lens{grid-template-columns:minmax(0,1fr)}}
+.lens-list{display:flex;flex-direction:column;gap:4px}
+.lens-list button{text-align:left;padding:10px 12px;border-radius:8px;border:1px solid transparent;background:transparent;cursor:pointer;font-size:14.5px;font-weight:500}
+.lens-list button[aria-selected="true"]{background:var(--surface);border-color:var(--line)}
+.lens-body{padding:18px 22px}
+.lens-body .file{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-bottom:10px}
+.lens-body h4{margin:14px 0 6px;font-size:15px}
+.lens-body ul{margin:0;padding-left:18px}
+.lens-body li,.lens-body p{font-size:14.5px;max-width:72ch;margin:4px 0}
+code{font-family:var(--f-mono);font-size:12px;background:var(--soft);padding:1px 5px;border-radius:4px}
+
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.cols.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:860px){.cols,.cols.three{grid-template-columns:minmax(0,1fr)}}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:11px;padding:1px 8px;border-radius:999px;background:var(--thread);color:var(--surface);margin-bottom:8px}
+
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="#"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M3 20 C 9 4, 15 22, 23 6" fill="none" stroke="var(--thread)" stroke-width="2.2" stroke-linecap="round"/><circle cx="3" cy="20" r="2.6" fill="var(--ink)"/><circle cx="13" cy="13" r="2.6" fill="var(--ink)"/><circle cx="23" cy="6" r="2.6" fill="var(--ink)"/></svg>Threadline</a>
+    <nav class="toplinks" aria-label="Page"><a href="#explore">Explore</a><a href="#ask">Ask</a><a href="#lenses">Lenses</a><a href="#setup">Set up</a><a href="https://github.com/amachadod/threadline">GitHub</a></nav>
+  </header>
+
+  <section class="hero">
+    <h1>A second brain that grows from <span>your documents</span>.</h1>
+    <div>
+      <p>Drop in briefs, call notes, emails or personal notes. Threadline has Claude read them, then turns them into linked notes you can open in Obsidian and a map Claude can follow. Every connection quotes the document it came from.</p>
+      <div class="byline">Portfolio project by Alberto Machado Domínguez · Both brains below are fictional</div>
+    </div>
+  </section>
+
+  <div class="flow" role="list" aria-label="How Threadline works">
+    <div class="step" role="listitem"><span class="n">01 · DROP</span><h3>Add documents</h3><p>Put files in a folder like <code>business/</code> or <code>personal/</code>. The folder picks the lens.</p><span class="tool">inbox/</span></div>
+    <div class="step" role="listitem"><span class="n">02 · READ</span><h3>Claude reads them</h3><p>It pulls out people, projects, decisions, goals and dates, each link backed by a quote.</p><span class="tool">Claude API</span></div>
+    <div class="step" role="listitem"><span class="n">03 · LINK</span><h3>Notes and a map</h3><p>One note per thing, linked together, plus a report of what's coming up and what to check.</p><span class="tool">Obsidian-ready</span></div>
+    <div class="step" role="listitem"><span class="n">04 · ASK</span><h3>Ask questions</h3><p>From your computer, or by opening a GitHub issue. Answers cite the notes they used.</p><span class="tool">GitHub Actions</span></div>
+  </div>
+
+  <section class="sec" id="explore" style="margin-top:0">
+    <div class="sec-h">
+      <h2>Pull a thread</h2>
+      <p>Two example brains built by the real code. Click any dot on the map, or a name in a note, to follow the connections.</p>
+    </div>
+    <div class="bar">
+      <div class="switch" role="group" aria-label="Choose a brain">
+        <button type="button" data-brain="business" aria-pressed="true">Business brain</button>
+        <button type="button" data-brain="personal" aria-pressed="false">Personal brain</button>
+      </div>
+      <div class="counts" id="counts"></div>
+    </div>
+    <div class="explorer">
+      <div class="panel mapbox">
+        <canvas id="map" aria-label="Map of notes and their connections. Use the list below to choose a note."></canvas>
+        <div class="tip" id="tip" hidden></div>
+        <div class="legend" id="legend"></div>
+        <div class="find"><input id="find" type="search" placeholder="Find a note…" aria-label="Find a note"><div class="chips" id="chips"></div></div>
+      </div>
+      <div class="panel note">
+        <div class="tabs" role="tablist" aria-label="Note view">
+          <button role="tab" id="tab-note" aria-selected="true">Note</button>
+          <button role="tab" id="tab-md" aria-selected="false">As an Obsidian file</button>
+        </div>
+        <div id="notebody" class="notebody" aria-live="polite"></div>
+        <pre id="mdbody" class="md" hidden></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="ask">
+    <div class="sec-h">
+      <h2>Ask the brain</h2>
+      <p>Threadline finds the matching notes, follows their links two steps out, and gives Claude only those. Example answers; citations are checked against the notes.</p>
+    </div>
+    <div class="ask">
+      <div class="qs" id="qs"></div>
+      <div class="panel answer" id="answer" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-h">
+      <h2>The report</h2>
+      <p>Rebuilt with every update and saved as <code>REPORT.md</code> next to the notes.</p>
+    </div>
+    <div class="rep" id="report"></div>
+  </section>
+
+  <section class="sec" id="lenses">
+    <div class="sec-h">
+      <h2>Lenses, in plain English</h2>
+      <p>A lens tells Claude what's worth remembering for one kind of brain. Add your own by copying a file. No code.</p>
+    </div>
+    <div class="lens">
+      <div class="lens-list" role="tablist" aria-label="Lenses" id="lens-list"></div>
+      <div class="panel lens-body" id="lens-body"></div>
+    </div>
+  </section>
+
+  <section class="sec" id="setup">
+    <div class="sec-h">
+      <h2>Run your own</h2>
+      <p>Needs a Claude API key. Obsidian is optional: the notes are plain Markdown files. Full guide in the README.</p>
+    </div>
+    <div class="cols">
+      <div class="panel box">
+        <span class="tag">Recommended · free</span>
+        <h3>Your GitHub repository is the brain</h3>
+        <p>Add documents on github.com or from your computer. GitHub reads them, updates the notes and commits them back. Ask questions by opening an issue.</p>
+        <ol><li>Make a private copy with "Use this template"</li><li>Add <code>ANTHROPIC_API_KEY</code> as a secret and set <code>THREADLINE_ENABLED</code></li><li>Drop documents into <code>inbox/business/</code> or <code>inbox/personal/</code></li><li>Open the repository folder in Obsidian, if you like</li></ol>
+      </div>
+      <div class="panel box">
+        <h3>On your own computer</h3>
+        <p>Keep everything local, next to your Obsidian vault. Same notes, same map.</p>
+        <ol><li>Download the code and add your key to <code>.env</code></li><li>Put documents in <code>inbox/</code></li><li>Run <code>npm run build</code>, then <code>npm run ask -- "your question"</code></li><li>Open the folder in Obsidian, or point Claude Code at it: <code>brain/CLAUDE.md</code> tells it how to use the map</li></ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-h"><h2>Design decisions</h2></div>
+    <div class="cols three">
+      <div class="panel box"><h3>Every link has a receipt</h3><p>Each connection quotes its document. If Claude suggests a link and the quote isn't really there, it's thrown away. Links are marked stated, inferred or unclear, so guesses never look like facts.</p></div>
+      <div class="panel box"><h3>Documents are untrusted</h3><p>Hidden text, like the instructions buried in the example's vendor proposal, is removed before Claude reads anything. Bank details, card numbers and keys are redacted. A document that tries to instruct the AI adds nothing.</p></div>
+      <div class="panel box"><h3>You stay in charge</h3><p>Write under "Your notes" or mark a note <code>confirmed: true</code> and it survives every rebuild. Delete a document and exactly what it contributed disappears. Your own notes are never touched.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Threadline · MIT licence · Alberto Machado Domínguez · Also see <a href="https://amachadod.github.io/minuta/">Minuta</a>, <a href="https://amachadod.github.io/posta/">Posta</a> and <a href="https://amachadod.github.io/plano/">Plano</a></span>
+    <span>Claude and Obsidian are trademarks of their owners. Threadline is an independent project.</span>
+  </footer>
+</div>
+
+<script src="data.js"></script>
+<script>
+(function(){
+const D = window.THREADLINE;
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+const cssVar = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const day = (d) => d ? new Date(d + "T12:00:00Z").toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric", timeZone:"UTC" }) : "";
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+let B, brainId = "business", sel = null, typeColor = {}, pos = {}, view = { s: 1, x: 0, y: 0 };
+
+// ---------- layout: a small, deterministic force simulation ----------
+function layout(nodes, edges) {
+  const P = {};
+  const types = [...new Set(nodes.map((n) => n.type))];
+  nodes.forEach((n, i) => {
+    const t = types.indexOf(n.type), a = (t / types.length) * Math.PI * 2 + (i % 7) * 0.31;
+    const r = 180 + (i % 5) * 26;
+    P[n.id] = { x: Math.cos(a) * r, y: Math.sin(a) * r, vx: 0, vy: 0 };
+  });
+  for (let it = 0; it < 500; it++) {
+    const cool = 1 - it / 500;
+    for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) {
+      const a = P[nodes[i].id], b = P[nodes[j].id];
+      let dx = a.x - b.x, dy = a.y - b.y, d2 = dx * dx + dy * dy + 0.01;
+      const f = 8200 / d2;
+      const d = Math.sqrt(d2); dx /= d; dy /= d;
+      a.vx += dx * f; a.vy += dy * f; b.vx -= dx * f; b.vy -= dy * f;
+    }
+    for (const e of edges) {
+      const a = P[e.from], b = P[e.to];
+      const dx = b.x - a.x, dy = b.y - a.y, d = Math.sqrt(dx * dx + dy * dy) + 0.01;
+      const f = (d - 120) * 0.035;
+      a.vx += dx / d * f; a.vy += dy / d * f; b.vx -= dx / d * f; b.vy -= dy / d * f;
+    }
+    for (const n of nodes) { const p = P[n.id]; p.vx -= p.x * 0.012; p.vy -= p.y * 0.012; p.x += Math.max(-20, Math.min(20, p.vx)) * cool; p.y += Math.max(-20, Math.min(20, p.vy)) * cool; p.vx *= 0.5; p.vy *= 0.5; }
+  }
+  return P;
+}
+
+// ---------- map drawing ----------
+const cv = $("map"), ctx = cv.getContext("2d");
+let W = 0, H = 0;
+function fit() {
+  const r = cv.getBoundingClientRect(), dpr = Math.min(2, window.devicePixelRatio || 1);
+  W = r.width; H = r.height;
+  cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const xs = Object.values(pos).map((p) => p.x), ys = Object.values(pos).map((p) => p.y);
+  const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
+  const pad = 56;
+  view.s = Math.min((W - pad * 2) / (maxX - minX || 1), (H - pad * 2) / (maxY - minY || 1));
+  view.x = W / 2 - ((minX + maxX) / 2) * view.s; view.y = H / 2 - ((minY + maxY) / 2) * view.s;
+  draw();
+}
+const sx = (p) => p.x * view.s + view.x, sy = (p) => p.y * view.s + view.y;
+const radius = (n) => 5 + Math.min(10, n.degree * 1.4);
+function neighbourIds(id) {
+  const s = new Set([id]);
+  B.edges.forEach((e) => { if (e.from === id) s.add(e.to); if (e.to === id) s.add(e.from); });
+  return s;
+}
+function draw() {
+  if (!B) return;
+  ctx.clearRect(0, 0, W, H);
+  const near = sel ? neighbourIds(sel) : null;
+  const thread = cssVar("--thread"), muted = cssVar("--muted"), line = cssVar("--line"), ink = cssVar("--ink"), board = cssVar("--board");
+  for (const e of B.edges) {
+    const a = pos[e.from], b = pos[e.to];
+    const on = sel && (e.from === sel || e.to === sel);
+    const x1 = sx(a), y1 = sy(a), x2 = sx(b), y2 = sy(b);
+    const mx = (x1 + x2) / 2 + (y2 - y1) * 0.12, my = (y1 + y2) / 2 - (x2 - x1) * 0.12;
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.quadraticCurveTo(mx, my, x2, y2);
+    ctx.setLineDash(e.kind === "inferred" ? [6, 5] : e.kind === "unclear" ? [2, 4] : []);
+    ctx.strokeStyle = on ? thread : sel ? line : muted;
+    ctx.globalAlpha = on ? 1 : sel ? 0.7 : 0.45;
+    ctx.lineWidth = on ? 2.2 : 1.2;
+    ctx.stroke();
+  }
+  ctx.setLineDash([]); ctx.globalAlpha = 1;
+  for (const n of B.nodes) {
+    const p = pos[n.id], x = sx(p), y = sy(p), r = radius(n);
+    const dim = near && !near.has(n.id);
+    ctx.globalAlpha = dim ? 0.25 : 1;
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = cssVar(typeColor[n.type]); ctx.fill();
+    ctx.lineWidth = n.id === sel ? 3 : 1.5; ctx.strokeStyle = n.id === sel ? ink : board; ctx.stroke();
+    if (!dim && (n.degree >= 3 || (near && near.has(n.id)))) {
+      ctx.font = `${n.id === sel ? 600 : 500} 12.5px Figtree, Helvetica, Arial, sans-serif`;
+      ctx.fillStyle = ink; ctx.textAlign = "center";
+      ctx.lineWidth = 4; ctx.strokeStyle = board; ctx.strokeText(n.name, x, y + r + 14);
+      ctx.fillText(n.name, x, y + r + 14);
+    }
+  }
+  ctx.globalAlpha = 1;
+}
+function hit(ev) {
+  const r = cv.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+  let best = null, bd = 1e9;
+  for (const n of B.nodes) { const p = pos[n.id], d = Math.hypot(sx(p) - x, sy(p) - y); if (d < radius(n) + 6 && d < bd) { bd = d; best = n; } }
+  return { node: best, x, y };
+}
+let drag = null;
+cv.addEventListener("pointerdown", (ev) => { drag = { x: ev.clientX, y: ev.clientY, vx: view.x, vy: view.y, moved: false }; cv.setPointerCapture(ev.pointerId); });
+cv.addEventListener("pointermove", (ev) => {
+  if (drag) {
+    const dx = ev.clientX - drag.x, dy = ev.clientY - drag.y;
+    if (Math.abs(dx) + Math.abs(dy) > 4) drag.moved = true;
+    if (drag.moved) { view.x = drag.vx + dx; view.y = drag.vy + dy; draw(); $("tip").hidden = true; return; }
+  }
+  const h = hit(ev);
+  cv.style.cursor = h.node ? "pointer" : "grab";
+  const tip = $("tip");
+  if (h.node) { tip.hidden = false; tip.textContent = h.node.name; tip.style.left = h.x + "px"; tip.style.top = h.y + "px"; } else tip.hidden = true;
+});
+cv.addEventListener("pointerup", (ev) => { const wasDrag = drag && drag.moved; drag = null; if (!wasDrag) { const h = hit(ev); if (h.node) select(h.node.id); } });
+cv.addEventListener("pointerleave", () => { $("tip").hidden = true; });
+cv.addEventListener("wheel", (ev) => {
+  ev.preventDefault();
+  const r = cv.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+  const k = Math.exp(-ev.deltaY * 0.0015), s = Math.max(0.2, Math.min(6, view.s * k));
+  view.x = x - (x - view.x) * (s / view.s); view.y = y - (y - view.y) * (s / view.s); view.s = s; draw();
+}, { passive: false });
+new ResizeObserver(() => fit()).observe(cv);
+
+// ---------- note panel ----------
+const byId = (id) => B.nodes.find((n) => n.id === id);
+const byName = (name) => B.nodes.find((n) => n.name === name || n.aliases.includes(name));
+const docByName = (name) => B.docs.find((d) => d.name === name);
+const docById = (id) => B.docs.find((d) => d.id === id);
+const nodeBtn = (n) => `<button class="wl" data-node="${esc(n.id)}">${esc(n.name)}</button>`;
+const docBtn = (d) => `<button class="wl doc" data-doc="${esc(d.id)}">${esc(d.title)}</button>`;
+
+function showNote(id) {
+  const n = byId(id);
+  const out = B.edges.filter((e) => e.from === id || e.to === id);
+  const conn = out.map((e) => {
+    const other = byId(e.from === id ? e.to : e.from);
+    const rel = e.relation.replace(/_/g, " ") + (e.from === id ? "" : " (from)");
+    return `<li class="${e.kind}"><div class="rel">${esc(rel)} ${nodeBtn(other)}${e.kind !== "stated" ? `<span class="kind">${e.kind}</span>` : ""}</div>
+      <q>“${esc(e.evidence)}”</q><div class="num" style="margin-top:2px">${docBtn(docById(e.source))}</div></li>`;
+  }).join("");
+  $("notebody").innerHTML = `
+    <div class="meta"><span class="pill type" style="--c:var(${typeColor[n.type]})">${esc(n.type)}</span>
+      ${n.date ? `<span class="pill">${day(n.date)}</span>` : ""}${n.value ? `<span class="pill">${esc(n.value)}</span>` : ""}
+      <span class="pill">${n.sources.length} source${n.sources.length === 1 ? "" : "s"}</span></div>
+    <h3>${esc(n.name)}</h3>
+    ${n.aliases.length ? `<div class="num">Also called: ${n.aliases.map(esc).join(", ")}</div>` : ""}
+    <p>${esc(n.summary)}</p>
+    ${out.length ? `<h4>Connections · ${out.length}</h4><ul class="conn">${conn}</ul>` : `<h4>Connections</h4><p class="num">None yet.</p>`}
+    <h4>Sources</h4><ul class="srcs">${n.sources.map((s) => `<li>${docBtn(docById(s))}</li>`).join("")}</ul>
+    <div class="yours"><b>Your notes</b> · anything you write here in Obsidian is kept on every rebuild.</div>`;
+  $("mdbody").textContent = n.markdown;
+}
+
+function showDoc(id) {
+  const d = docById(id);
+  const quotes = B.edges.filter((e) => e.source === id).map((e) => e.evidence).sort((a, b) => b.length - a.length);
+  let html = esc(d.text);
+  for (const q of quotes) {
+    const flat = esc(q).replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, "\\s+");
+    try { html = html.replace(new RegExp(`(?<!<mark>)(${flat})`), "<mark>$1</mark>"); } catch (e) {}
+  }
+  const removed = d.original ? (d.original.match(/<!--[\s\S]*?-->/g) || []).join("\n") : "";
+  $("notebody").innerHTML = `
+    ${sel ? `<button class="back" data-back="1">← Back to ${esc(byId(sel).name)}</button>` : ""}
+    <div class="meta"><span class="pill">${esc(d.lens)} lens</span><span class="pill">${d.entities} notes</span><span class="pill">${d.links} links</span>${d.dropped ? `<span class="pill">${d.dropped} thrown away</span>` : ""}</div>
+    <h3>${esc(d.title)}</h3><div class="num" style="margin-bottom:12px">inbox/${esc(d.id)}</div>
+    ${d.flags.length ? `<div class="warnbox"><b>${esc(d.flags.join("; "))}.</b> Threadline removed this before Claude read the document:${removed ? `<pre>${esc(removed)}</pre>` : ""}</div>` : ""}
+    ${d.droppedWhy && d.droppedWhy.length ? `<div class="warnbox" style="border-left-color:var(--warn)"><b>Thrown away:</b> ${d.droppedWhy.map((x) => `${esc(x.item)} (${esc(x.why)})`).join("; ")}</div>` : ""}
+    <div class="docview" style="padding:0"><pre>${html}</pre></div>
+    <p class="num" style="margin-top:12px">Highlighted: the quotes that back each link.</p>`;
+  $("mdbody").textContent = d.text;
+  setTab("note");
+}
+
+function select(id) {
+  sel = id;
+  showNote(id);
+  draw();
+  [...$("chips").children].forEach((c) => c.classList.toggle("on", c.dataset.node === id));
+}
+document.addEventListener("click", (ev) => {
+  const t = ev.target.closest("[data-node],[data-doc],[data-back]");
+  if (!t || !t.closest(".note,.answer,#report")) return;
+  if (t.dataset.node) { select(t.dataset.node); if (t.closest(".answer,#report")) $("explore").scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); }
+  else if (t.dataset.doc) { showDoc(t.dataset.doc); if (t.closest(".answer")) $("explore").scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); }
+  else if (t.dataset.back) select(sel);
+});
+function setTab(which) {
+  $("tab-note").setAttribute("aria-selected", which === "note"); $("tab-md").setAttribute("aria-selected", which === "md");
+  $("notebody").hidden = which !== "note"; $("mdbody").hidden = which !== "md";
+}
+$("tab-note").onclick = () => setTab("note");
+$("tab-md").onclick = () => setTab("md");
+
+function chips(filter = "") {
+  const f = filter.toLowerCase();
+  $("chips").innerHTML = B.nodes.filter((n) => !f || n.name.toLowerCase().includes(f) || n.aliases.some((a) => a.toLowerCase().includes(f)))
+    .sort((a, b) => b.degree - a.degree || a.name.localeCompare(b.name))
+    .map((n) => `<button class="chip${n.id === sel ? " on" : ""}" data-node="${esc(n.id)}"><span class="dot" style="--c:var(${typeColor[n.type]})"></span>${esc(n.name)}</button>`).join("");
+}
+$("find").addEventListener("input", (e) => chips(e.target.value));
+$("chips").addEventListener("click", (e) => { const c = e.target.closest("[data-node]"); if (c) select(c.dataset.node); });
+
+// ---------- ask ----------
+let qi = 0;
+function showAnswer(i) {
+  qi = i;
+  [...$("qs").children].forEach((b, k) => b.setAttribute("aria-pressed", k === i));
+  const a = B.answers[i];
+  $("answer").innerHTML = `${a.unknown ? `<span class="unknown">Not in the brain</span>` : ""}
+    <p class="a">${esc(a.answer)}</p>
+    ${a.citations.length ? `<div class="lab">From these notes</div><div class="chips" style="max-height:none">${a.citations.map((c) => { const n = byName(c); return n ? `<button class="chip" data-node="${esc(n.id)}"><span class="dot" style="--c:var(${typeColor[n.type]})"></span>${esc(c)}</button>` : ""; }).join("")}</div>` : ""}
+    ${a.sources.length ? `<div class="lab">Documents</div><div>${a.sources.map((s) => docBtn(docById(s.id))).join(" · ")}</div>` : ""}
+    <p class="num" style="margin-top:14px">Threadline gave Claude ${a.searched} notes from the map for this question, not the whole brain.</p>`;
+}
+$("qs").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) showAnswer(+b.dataset.i); });
+
+// ---------- report ----------
+function showReport() {
+  const r = B.report;
+  $("report").innerHTML = `
+    <div class="panel box"><h3>Most connected</h3><ol>${r.hubs.slice(0, 6).map((h) => `<li>${nodeBtn(byId(h.id))} <span class="num">${h.links} links</span></li>`).join("")}</ol></div>
+    <div class="panel box"><h3>Coming up</h3><ul>${r.upcoming.slice(0, 6).map((u) => `<li><span class="num">${day(u.date)}</span> ${nodeBtn(byId(u.id))}</li>`).join("") || "<li>Nothing dated ahead.</li>"}</ul></div>
+    <div class="panel box"><h3>Needs a human</h3>
+      <p><span class="big">${r.review}</span>links are inferred or unclear. Confirm or correct them in the notes.</p>
+      <p><span class="big">${r.dropped}</span>suggested link${r.dropped === 1 ? " was" : "s were"} thrown away: the quote wasn't in the document.</p>
+      ${r.flagged.length ? `<p><span class="big">${r.flagged.length}</span>document had hidden text removed: ${r.flagged.map(esc).join(", ")}.</p>` : ""}</div>`;
+}
+
+// ---------- brain switch ----------
+function load(id) {
+  brainId = id; B = D.brains[id]; sel = null;
+  document.querySelectorAll(".switch button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.brain === id));
+  const types = [...new Set(B.nodes.map((n) => n.type))];
+  typeColor = Object.fromEntries(types.map((t, i) => [t, `--t${(i % 8) + 1}`]));
+  pos = layout(B.nodes, B.edges);
+  $("legend").innerHTML = types.map((t) => `<span><span class="dot" style="--c:var(${typeColor[t]})"></span>${esc(t)}</span>`).join("") +
+    `<span><span class="ln"></span>stated</span><span><span class="ln inferred"></span>inferred</span><span><span class="ln unclear"></span>unclear</span>`;
+  $("counts").innerHTML = `<span><b>${B.report.counts.docs}</b> documents</span><span><b>${B.report.counts.notes}</b> notes</span><span><b>${B.report.counts.links}</b> links</span>`;
+  $("qs").innerHTML = B.answers.map((a, i) => `<button type="button" data-i="${i}" aria-pressed="${i === 0}">${esc(a.question)}</button>`).join("");
+  $("find").value = "";
+  chips();
+  fit();
+  select(B.report.hubs[0].id);
+  showAnswer(0);
+  showReport();
+}
+document.querySelectorAll(".switch button").forEach((b) => b.addEventListener("click", () => load(b.dataset.brain)));
+
+// ---------- lenses ----------
+function md(text){
+  const out = []; let list = false;
+  const inline = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/`(.+?)`/g, "<code>$1</code>");
+  for (const raw of text.split("\n")) {
+    const l = raw.trimEnd();
+    if (/^- /.test(l)) { if (!list) { out.push("<ul>"); list = true; } out.push(`<li>${inline(l.slice(2))}</li>`); continue; }
+    if (list) { out.push("</ul>"); list = false; }
+    if (/^## /.test(l)) out.push(`<h4>${inline(l.slice(3))}</h4>`); else if (l.trim()) out.push(`<p>${inline(l)}</p>`);
+  }
+  if (list) out.push("</ul>");
+  return out.join("");
+}
+const order = ["business", "personal", "marketing"];
+const lenses = [...D.lenses].sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+$("lens-list").innerHTML = lenses.map((l, i) => `<button role="tab" aria-selected="${i === 0}" data-i="${i}">${esc(l.name)}</button>`).join("");
+$("lens-list").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) showLens(+b.dataset.i); });
+function showLens(i) {
+  [...$("lens-list").children].forEach((b, k) => b.setAttribute("aria-selected", k === i));
+  const l = lenses[i];
+  $("lens-body").innerHTML = `<div class="file">lenses/${esc(l.id)}.md · folders: ${l.folders.map((f) => `<code>inbox/${esc(f)}/</code>`).join(" ")}</div>
+    <p><b>Types:</b> ${l.types.map(esc).join(", ")}</p>${md(l.instructions)}`;
+}
+showLens(0);
+
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", draw);
+new MutationObserver(draw).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+load("business");
+})();
+</script>
+</body>
+</html>
