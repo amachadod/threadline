@@ -1,0 +1,891 @@
+{
+ "_note": "Example of what Claude returns for each page of the fictional Northwind SaaS handbook. The demo and tests use it instead of calling the API. Every evidence quote is checked against the page.",
+ "handbook/Welcome and onboarding.md": {
+  "entities": [
+   {
+    "name": "Welcome and onboarding",
+    "type": "policy",
+    "summary": "The first-week guide for new people at Northwind SaaS.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Operations team",
+    "type": "team",
+    "summary": "Owns onboarding, remote work, expenses and travel pages.",
+    "aliases": [
+     "#ask-ops"
+    ],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Security basics",
+    "type": "policy",
+    "summary": "Rules for passwords, two-factor authentication and phishing.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "AI use policy",
+    "type": "policy",
+    "summary": "Which AI tools are approved and what data can go into them.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Slack",
+    "type": "tool",
+    "summary": "Company chat.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Asana",
+    "type": "tool",
+    "summary": "Where teams track projects and requests.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   }
+  ],
+  "links": [
+   {
+    "from": "Welcome and onboarding",
+    "to": "Operations team",
+    "relation": "owned_by",
+    "kind": "stated",
+    "evidence": "Owner: Operations team"
+   },
+   {
+    "from": "Welcome and onboarding",
+    "to": "Security basics",
+    "relation": "requires",
+    "kind": "stated",
+    "evidence": "set up your laptop, your password manager and two-factor authentication. See Security basics."
+   },
+   {
+    "from": "Welcome and onboarding",
+    "to": "AI use policy",
+    "relation": "requires",
+    "kind": "stated",
+    "evidence": "Day 2: read Remote work, Expenses and the AI use policy."
+   },
+   {
+    "from": "Welcome and onboarding",
+    "to": "Slack",
+    "relation": "uses",
+    "kind": "stated",
+    "evidence": "join your team's channels in Slack"
+   },
+   {
+    "from": "Welcome and onboarding",
+    "to": "Asana",
+    "relation": "uses",
+    "kind": "stated",
+    "evidence": "your team's project in Asana"
+   }
+  ],
+  "suspicious": false
+ },
+ "handbook/Remote work.md": {
+  "entities": [
+   {
+    "name": "Remote work",
+    "type": "policy",
+    "summary": "Northwind SaaS is remote-first, with core hours and a home office budget.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Operations team",
+    "type": "team",
+    "summary": "Owns onboarding, remote work, expenses and travel pages.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Core hours",
+    "type": "rule",
+    "summary": "When everyone is expected to be reachable.",
+    "aliases": [],
+    "date": null,
+    "value": "10:00 to 15:00 CET"
+   },
+   {
+    "name": "Home office budget",
+    "type": "rule",
+    "summary": "Yearly money for home office equipment.",
+    "aliases": [],
+    "date": null,
+    "value": "€500 per year"
+   },
+   {
+    "name": "Expenses",
+    "type": "policy",
+    "summary": "How to claim money back.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Notion",
+    "type": "tool",
+    "summary": "Where decisions and the handbook live.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   }
+  ],
+  "links": [
+   {
+    "from": "Remote work",
+    "to": "Operations team",
+    "relation": "owned_by",
+    "kind": "stated",
+    "evidence": "Owner: Operations team"
+   },
+   {
+    "from": "Core hours",
+    "to": "Remote work",
+    "relation": "part_of",
+    "kind": "stated",
+    "evidence": "Core hours are 10:00 to 15:00 CET."
+   },
+   {
+    "from": "Home office budget",
+    "to": "Remote work",
+    "relation": "part_of",
+    "kind": "stated",
+    "evidence": "Home office budget: €500 per year for a desk, chair, screen or headset."
+   },
+   {
+    "from": "Home office budget",
+    "to": "Expenses",
+    "relation": "requires",
+    "kind": "stated",
+    "evidence": "Claim it through Expenses."
+   },
+   {
+    "from": "Remote work",
+    "to": "Notion",
+    "relation": "uses",
+    "kind": "stated",
+    "evidence": "decisions go in Notion"
+   }
+  ],
+  "suspicious": false
+ },
+ "handbook/Expenses.md": {
+  "entities": [
+   {
+    "name": "Expenses",
+    "type": "policy",
+    "summary": "What you can claim and how to claim it.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Finance team",
+    "type": "team",
+    "summary": "Owns the expenses page.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Home office budget",
+    "type": "rule",
+    "summary": "Yearly money for home office equipment.",
+    "aliases": [],
+    "date": null,
+    "value": "€300 per year"
+   },
+   {
+    "name": "Expense claim deadline",
+    "type": "rule",
+    "summary": "How long you have to submit a receipt.",
+    "aliases": [],
+    "date": null,
+    "value": "30 days"
+   },
+   {
+    "name": "Travel policy",
+    "type": "policy",
+    "summary": "How to book and pay for work travel.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Asana",
+    "type": "tool",
+    "summary": "Where teams track projects and requests.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   }
+  ],
+  "links": [
+   {
+    "from": "Expenses",
+    "to": "Finance team",
+    "relation": "owned_by",
+    "kind": "stated",
+    "evidence": "Owner: Finance team"
+   },
+   {
+    "from": "Home office budget",
+    "to": "Expenses",
+    "relation": "part_of",
+    "kind": "stated",
+    "evidence": "Home office equipment: up to €300 per year."
+   },
+   {
+    "from": "Expense claim deadline",
+    "to": "Expenses",
+    "relation": "part_of",
+    "kind": "stated",
+    "evidence": "with a photo of the receipt within 30 days"
+   },
+   {
+    "from": "Expenses",
+    "to": "Asana",
+    "relation": "uses",
+    "kind": "stated",
+    "evidence": "Submit a request in Asana in the \"Expenses\" project"
+   },
+   {
+    "from": "Expenses",
+    "to": "Travel policy",
+    "relation": "applies_to",
+    "kind": "stated",
+    "evidence": "Travel booked under the Travel policy."
+   }
+  ],
+  "suspicious": false
+ },
+ "handbook/Security basics.md": {
+  "entities": [
+   {
+    "name": "Security basics",
+    "type": "policy",
+    "summary": "Rules for passwords, two-factor authentication and phishing.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "IT and Security team",
+    "type": "team",
+    "summary": "Owns security pages.",
+    "aliases": [
+     "#security"
+    ],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Phishing report time",
+    "type": "rule",
+    "summary": "How fast to report a suspicious email.",
+    "aliases": [],
+    "date": null,
+    "value": "1 hour"
+   },
+   {
+    "name": "Password manager",
+    "type": "tool",
+    "summary": "Company password manager, required for every work account.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   }
+  ],
+  "links": [
+   {
+    "from": "Security basics",
+    "to": "IT and Security team",
+    "relation": "owned_by",
+    "kind": "stated",
+    "evidence": "Owner: IT and Security team"
+   },
+   {
+    "from": "Phishing report time",
+    "to": "Security basics",
+    "relation": "part_of",
+    "kind": "stated",
+    "evidence": "Report a suspicious email in #security within 1 hour"
+   },
+   {
+    "from": "IT and Security team",
+    "to": "Phishing report time",
+    "relation": "contact_for",
+    "kind": "inferred",
+    "evidence": "Report a suspicious email in #security within 1 hour"
+   },
+   {
+    "from": "Security basics",
+    "to": "Password manager",
+    "relation": "requires",
+    "kind": "stated",
+    "evidence": "Use the company password manager for every work account."
+   }
+  ],
+  "suspicious": false
+ },
+ "handbook/AI use policy.md": {
+  "entities": [
+   {
+    "name": "AI use policy",
+    "type": "policy",
+    "summary": "Which AI tools are approved and what data can go into them.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "IT and Security team",
+    "type": "team",
+    "summary": "Owns security pages.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Approved AI tools",
+    "type": "rule",
+    "summary": "AI tools people may use for work.",
+    "aliases": [],
+    "date": null,
+    "value": "Claude (company workspace)"
+   },
+   {
+    "name": "Human check before sending",
+    "type": "rule",
+    "summary": "A person approves every AI output before it reaches a customer or is published.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   }
+  ],
+  "links": [
+   {
+    "from": "AI use policy",
+    "to": "IT and Security team",
+    "relation": "owned_by",
+    "kind": "stated",
+    "evidence": "Owner: IT and Security team"
+   },
+   {
+    "from": "Approved AI tools",
+    "to": "AI use policy",
+    "relation": "part_of",
+    "kind": "stated",
+    "evidence": "Claude through the company workspace."
+   },
+   {
+    "from": "IT and Security team",
+    "to": "Approved AI tools",
+    "relation": "contact_for",
+    "kind": "stated",
+    "evidence": "Other AI tools need approval from the IT and Security team first."
+   },
+   {
+    "from": "Human check before sending",
+    "to": "AI use policy",
+    "relation": "part_of",
+    "kind": "stated",
+    "evidence": "A person reads and approves every AI output before it goes to a customer or is published."
+   }
+  ],
+  "suspicious": false
+ },
+ "handbook/Brand voice.md": {
+  "entities": [
+   {
+    "name": "Brand voice",
+    "type": "policy",
+    "summary": "How Northwind SaaS sounds: plain, short, helpful.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Marketing team",
+    "type": "team",
+    "summary": "Owns the brand voice page.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   }
+  ],
+  "links": [
+   {
+    "from": "Brand voice",
+    "to": "Marketing team",
+    "relation": "owned_by",
+    "kind": "stated",
+    "evidence": "Owner: Marketing team"
+   }
+  ],
+  "suspicious": false
+ },
+ "handbook/Meeting etiquette.md": {
+  "entities": [
+   {
+    "name": "Meeting etiquette",
+    "type": "policy",
+    "summary": "How meetings run at Northwind SaaS.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Operations team",
+    "type": "team",
+    "summary": "Owns onboarding, remote work, expenses and travel pages.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Default meeting length",
+    "type": "rule",
+    "summary": "How long a meeting is unless there's a reason.",
+    "aliases": [],
+    "date": null,
+    "value": "25 minutes"
+   },
+   {
+    "name": "Notion",
+    "type": "tool",
+    "summary": "Where decisions and the handbook live.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   }
+  ],
+  "links": [
+   {
+    "from": "Meeting etiquette",
+    "to": "Operations team",
+    "relation": "owned_by",
+    "kind": "stated",
+    "evidence": "Owner: Operations team"
+   },
+   {
+    "from": "Default meeting length",
+    "to": "Meeting etiquette",
+    "relation": "part_of",
+    "kind": "stated",
+    "evidence": "Default meeting length is 25 minutes"
+   },
+   {
+    "from": "Meeting etiquette",
+    "to": "Notion",
+    "relation": "uses",
+    "kind": "stated",
+    "evidence": "Notes and decisions go in Notion within a day."
+   }
+  ],
+  "suspicious": false
+ },
+ "handbook/Support playbook.md": {
+  "entities": [
+   {
+    "name": "Support playbook",
+    "type": "policy",
+    "summary": "How the Support team answers customers.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Support team",
+    "type": "team",
+    "summary": "Owns the support playbook.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "First response time",
+    "type": "rule",
+    "summary": "How fast a customer gets a first reply.",
+    "aliases": [],
+    "date": null,
+    "value": "4 business hours"
+   },
+   {
+    "name": "Urgent ticket response time",
+    "type": "rule",
+    "summary": "Reply time when the product is down.",
+    "aliases": [],
+    "date": null,
+    "value": "1 hour"
+   },
+   {
+    "name": "Brand voice",
+    "type": "policy",
+    "summary": "How Northwind SaaS sounds: plain, short, helpful.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Asana",
+    "type": "tool",
+    "summary": "Where teams track projects and requests.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   }
+  ],
+  "links": [
+   {
+    "from": "Support playbook",
+    "to": "Support team",
+    "relation": "owned_by",
+    "kind": "stated",
+    "evidence": "Owner: Support team"
+   },
+   {
+    "from": "First response time",
+    "to": "Support playbook",
+    "relation": "part_of",
+    "kind": "stated",
+    "evidence": "First response time: within 4 business hours for every ticket."
+   },
+   {
+    "from": "Urgent ticket response time",
+    "to": "Support playbook",
+    "relation": "part_of",
+    "kind": "stated",
+    "evidence": "Urgent tickets (the product is down) within 1 hour."
+   },
+   {
+    "from": "Support playbook",
+    "to": "Brand voice",
+    "relation": "uses",
+    "kind": "stated",
+    "evidence": "Use the Brand voice."
+   },
+   {
+    "from": "Support playbook",
+    "to": "Asana",
+    "relation": "uses",
+    "kind": "stated",
+    "evidence": "create a task in Asana"
+   }
+  ],
+  "suspicious": false
+ },
+ "handbook/Customer success handbook.md": {
+  "entities": [
+   {
+    "name": "Customer success handbook",
+    "type": "policy",
+    "summary": "How the Customer success team works with customers.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Customer success team",
+    "type": "team",
+    "summary": "Owns the customer success handbook.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "First response time",
+    "type": "rule",
+    "summary": "How fast a customer gets a first reply.",
+    "aliases": [],
+    "date": null,
+    "value": "24 hours"
+   },
+   {
+    "name": "Quarterly business review threshold",
+    "type": "rule",
+    "summary": "Which customers get a quarterly business review.",
+    "aliases": [],
+    "date": null,
+    "value": "more than €10,000 a year"
+   },
+   {
+    "name": "HubSpot",
+    "type": "tool",
+    "summary": "The CRM where customers and their managers are recorded.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   }
+  ],
+  "links": [
+   {
+    "from": "Customer success handbook",
+    "to": "Customer success team",
+    "relation": "owned_by",
+    "kind": "stated",
+    "evidence": "Owner: Customer success team"
+   },
+   {
+    "from": "First response time",
+    "to": "Customer success handbook",
+    "relation": "part_of",
+    "kind": "stated",
+    "evidence": "First response time: within 24 hours on working days."
+   },
+   {
+    "from": "Quarterly business review threshold",
+    "to": "Customer success handbook",
+    "relation": "part_of",
+    "kind": "stated",
+    "evidence": "Quarterly business reviews for every customer paying more than €10,000 a year."
+   },
+   {
+    "from": "Customer success handbook",
+    "to": "HubSpot",
+    "relation": "uses",
+    "kind": "stated",
+    "evidence": "Every customer has a named customer success manager in HubSpot."
+   }
+  ],
+  "suspicious": false
+ },
+ "handbook/Travel policy.md": {
+  "entities": [
+   {
+    "name": "Travel policy",
+    "type": "policy",
+    "summary": "How to book and pay for work travel.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Operations team",
+    "type": "team",
+    "summary": "Owns onboarding, remote work, expenses and travel pages.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Travel booking notice",
+    "type": "rule",
+    "summary": "How far ahead to book travel.",
+    "aliases": [],
+    "date": null,
+    "value": "14 days"
+   },
+   {
+    "name": "Team meetups",
+    "type": "rule",
+    "summary": "How often the whole team meets in person.",
+    "aliases": [],
+    "date": null,
+    "value": "twice a year in Lisbon"
+   }
+  ],
+  "links": [
+   {
+    "from": "Travel policy",
+    "to": "Operations team",
+    "relation": "owned_by",
+    "kind": "stated",
+    "evidence": "Owner: Operations team"
+   },
+   {
+    "from": "Travel booking notice",
+    "to": "Travel policy",
+    "relation": "part_of",
+    "kind": "stated",
+    "evidence": "at least 14 days ahead"
+   },
+   {
+    "from": "Team meetups",
+    "to": "Travel policy",
+    "relation": "part_of",
+    "kind": "stated",
+    "evidence": "Team meetups happen twice a year in Lisbon."
+   }
+  ],
+  "suspicious": false
+ },
+ "handbook/Tools we use.md": {
+  "entities": [
+   {
+    "name": "Tools we use",
+    "type": "policy",
+    "summary": "The list of approved work tools and what each is for.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "IT and Security team",
+    "type": "team",
+    "summary": "Owns security pages.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Slack",
+    "type": "tool",
+    "summary": "Company chat.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Asana",
+    "type": "tool",
+    "summary": "Where teams track projects and requests.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "HubSpot",
+    "type": "tool",
+    "summary": "The CRM where customers and their managers are recorded.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Notion",
+    "type": "tool",
+    "summary": "Where decisions and the handbook live.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "AI use policy",
+    "type": "policy",
+    "summary": "Which AI tools are approved and what data can go into them.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   }
+  ],
+  "links": [
+   {
+    "from": "Tools we use",
+    "to": "IT and Security team",
+    "relation": "owned_by",
+    "kind": "stated",
+    "evidence": "Owner: IT and Security team"
+   },
+   {
+    "from": "Tools we use",
+    "to": "Slack",
+    "relation": "uses",
+    "kind": "stated",
+    "evidence": "| Slack | Quick questions and team chat |"
+   },
+   {
+    "from": "Tools we use",
+    "to": "Asana",
+    "relation": "uses",
+    "kind": "stated",
+    "evidence": "| Asana | Projects, tasks and requests (including AI ideas) |"
+   },
+   {
+    "from": "Tools we use",
+    "to": "HubSpot",
+    "relation": "uses",
+    "kind": "stated",
+    "evidence": "| HubSpot | Customers, deals and the support inbox |"
+   },
+   {
+    "from": "Tools we use",
+    "to": "Notion",
+    "relation": "uses",
+    "kind": "stated",
+    "evidence": "| Notion | This handbook, decisions and meeting notes |"
+   },
+   {
+    "from": "Tools we use",
+    "to": "AI use policy",
+    "relation": "part_of",
+    "kind": "inferred",
+    "evidence": "Approved AI assistant (see AI use policy)"
+   }
+  ],
+  "suspicious": false
+ },
+ "handbook/Laptops and equipment.md": {
+  "entities": [
+   {
+    "name": "Laptops and equipment",
+    "type": "policy",
+    "summary": "Laptops, replacements and what to do if one is lost.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "IT and Security team",
+    "type": "team",
+    "summary": "Owns security pages.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   },
+   {
+    "name": "Laptop replacement",
+    "type": "rule",
+    "summary": "How often laptops are replaced.",
+    "aliases": [],
+    "date": null,
+    "value": "every 3 years"
+   },
+   {
+    "name": "Remote work",
+    "type": "policy",
+    "summary": "Northwind SaaS is remote-first, with core hours and a home office budget.",
+    "aliases": [],
+    "date": null,
+    "value": null
+   }
+  ],
+  "links": [
+   {
+    "from": "Laptops and equipment",
+    "to": "IT and Security team",
+    "relation": "owned_by",
+    "kind": "stated",
+    "evidence": "Owner: IT and Security team"
+   },
+   {
+    "from": "Laptop replacement",
+    "to": "Laptops and equipment",
+    "relation": "part_of",
+    "kind": "stated",
+    "evidence": "replaced every 3 years"
+   },
+   {
+    "from": "Laptops and equipment",
+    "to": "Remote work",
+    "relation": "applies_to",
+    "kind": "stated",
+    "evidence": "Use the home office budget (see Remote work)."
+   }
+  ],
+  "suspicious": false
+ }
+}
