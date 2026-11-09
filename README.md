@@ -2,6 +2,8 @@
 
 **A second brain that grows from your documents.**
 
+**Who it's for:** anyone with scattered notes and documents, such as account managers, marketers, consultants and students, who wants answers traced back to the source.
+
 Drop in briefs, call notes, emails or personal notes. Threadline has Claude read them and turns them into **linked notes you can open in Obsidian**, a **map Claude can follow** instead of searching every file, and a **report** of what's coming up and what to check. Every connection quotes the document it came from.
 
 It works for your business (clients, people, projects, decisions, deadlines, budgets), your personal life (goals, learning, people, plans) or a marketing team (campaigns, channels, results). Each is a plain-English "lens" you can edit or copy.
@@ -189,3 +191,6 @@ Node.js 20+, no dependencies. Claude Messages API with forced tool use, a small 
 ## License
 
 MIT. Claude, Obsidian and GitHub are trademarks of their respective owners. Threadline is an independent project and is not affiliated with them.
+
+---
+Built by Alberto Machado Domínguez · [albertomachdom@gmail.com](mailto:albertomachdom@gmail.com) · [LinkedIn](https://www.linkedin.com/in/alberto-machado-dom%C3%ADnguez-708290251/)
