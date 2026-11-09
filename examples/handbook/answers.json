@@ -1,0 +1,29 @@
+{
+  "_note": "Example answers for the demo's handbook questions, in the shape Claude returns. The real tool asks Claude with the handbook notes Threadline finds on the map; citations are checked against those notes. Northwind SaaS and its handbook are fictional.",
+  "questions": [
+    {
+      "question": "How much is the home office budget?",
+      "answer": "The handbook gives two different amounts. Remote work (edited 20 September 2026) says €500 per year for a desk, chair, screen or headset, claimed through Expenses. The Expenses page (edited 14 August 2026) says up to €300 per year. Check with the Operations team or the Finance team before you buy anything.",
+      "citations": ["Home office budget", "Remote work", "Expenses"],
+      "unknown": false
+    },
+    {
+      "question": "How fast should we reply to a customer?",
+      "answer": "The Support playbook says within 4 business hours for every ticket, and within 1 hour when the product is down. The Customer success handbook says within 24 hours on working days, but that page hasn't been edited since November 2024.",
+      "citations": ["First response time", "Support playbook", "Customer success handbook", "Urgent ticket response time"],
+      "unknown": false
+    },
+    {
+      "question": "Can I use an AI tool other than Claude?",
+      "answer": "Only after the IT and Security team approves it. The AI use policy approves Claude through the company workspace, says other AI tools need approval first, and says a person must approve every AI output before it reaches a customer or is published.",
+      "citations": ["Approved AI tools", "AI use policy", "IT and Security team", "Human check before sending"],
+      "unknown": false
+    },
+    {
+      "question": "What is the parental leave policy?",
+      "answer": "The handbook doesn't cover parental leave.",
+      "citations": [],
+      "unknown": true
+    }
+  ]
+}

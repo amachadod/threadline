@@ -56,6 +56,7 @@ export function prune(g, keep = new Set()) {
 export function addDoc(g, doc, lens, result) {
   g.docs[doc.id] = {
     title: doc.title, name: doc.name, lens: lens.id, hash: doc.hash,
+    owner: doc.meta?.owner || null, lastEdited: doc.meta?.lastEdited || null,
     flags: [...doc.flags, ...(result.suspicious ? [`Suspicious: ${result.reason}`] : [])],
     entities: result.entities.length, links: result.links.length,
     dropped: result.dropped.length, droppedWhy: result.dropped.slice(0, 20),

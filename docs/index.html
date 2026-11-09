@@ -126,6 +126,7 @@ pre.md{margin:0;padding:18px 20px;font:12.5px/1.6 var(--f-mono);white-space:pre-
 .qs button{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:12px 14px;cursor:pointer;font-size:14.5px;font-weight:500}
 .qs button[aria-pressed="true"]{border-color:var(--thread);box-shadow:inset 3px 0 0 var(--thread)}
 .answer{padding:18px 20px}
+.warnline{margin:10px 0 0;padding:8px 12px;border-left:3px solid var(--warn);background:color-mix(in srgb,var(--warn) 10%,transparent);border-radius:0 8px 8px 0;font-size:14px}
 .answer .a{font-size:16px;line-height:1.6;margin:0 0 14px;max-width:68ch}
 .answer .lab{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:12px 0 6px}
 .unknown{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid var(--warn);color:var(--warn);margin-bottom:10px}
@@ -173,7 +174,7 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);display
     <div>
       <p>Drop in briefs, call notes, emails or personal notes. Threadline has Claude read them, then turns them into linked notes you can open in Obsidian and a map Claude can follow. Every connection quotes the document it came from.</p>
       <p><b>Who it's for:</b> anyone with scattered notes and documents, such as account managers, marketers, consultants and students, who wants answers traced back to the source.</p>
-      <div class="byline">Portfolio project by Alberto Machado Domínguez · Both brains below are fictional</div>
+      <div class="byline">Portfolio project by Alberto Machado Domínguez · All three brains below are fictional</div>
     </div>
   </section>
 
@@ -187,12 +188,13 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);display
   <section class="sec" id="explore" style="margin-top:0">
     <div class="sec-h">
       <h2>Pull a thread</h2>
-      <p>Two example brains built by the real code. Click any dot on the map, or a name in a note, to follow the connections.</p>
+      <p>Three example brains built by the real code: a business, a person, and the handbook of a fictional company, Northwind SaaS (exported from Notion, a shared notes app). Click any dot on the map, or a name in a note, to follow the connections.</p>
     </div>
     <div class="bar">
       <div class="switch" role="group" aria-label="Choose a brain">
         <button type="button" data-brain="business" aria-pressed="true">Business brain</button>
         <button type="button" data-brain="personal" aria-pressed="false">Personal brain</button>
+        <button type="button" data-brain="handbook" aria-pressed="false">Company handbook</button>
       </div>
       <div class="counts" id="counts"></div>
     </div>
@@ -275,6 +277,7 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);display
 
   <footer>
     <span>Threadline · MIT licence · Alberto Machado Domínguez · <a href="mailto:albertomachdom@gmail.com">albertomachdom@gmail.com</a> · <a href="https://www.linkedin.com/in/alberto-machado-dom%C3%ADnguez-708290251/" target="_blank" rel="noopener noreferrer">LinkedIn</a> · Also see <a href="https://amachadod.github.io/minuta/">Minuta</a>, <a href="https://amachadod.github.io/posta/">Posta</a> and <a href="https://amachadod.github.io/plano/">Plano</a></span>
+    <span>Part of a suite: <a href="https://amachadod.github.io/ai-front-desk/">see how it fits together</a> · Demo data is fictional; the logic and tests are real.</span>
     <span>Claude and Obsidian are trademarks of their owners. Threadline is an independent project.</span>
   </footer>
 </div>
@@ -490,10 +493,11 @@ function showAnswer(i) {
   qi = i;
   [...$("qs").children].forEach((b, k) => b.setAttribute("aria-pressed", k === i));
   const a = B.answers[i];
-  $("answer").innerHTML = `${a.unknown ? `<span class="unknown">Not in the brain</span>` : ""}
+  $("answer").innerHTML = `${a.unknown ? `<span class="unknown">${brainId === "handbook" ? "Not in the handbook" : "Not in the brain"}</span>` : ""}
     <p class="a">${esc(a.answer)}</p>
     ${a.citations.length ? `<div class="lab">From these notes</div><div class="chips" style="max-height:none">${a.citations.map((c) => { const n = byName(c); return n ? `<button class="chip" data-node="${esc(n.id)}"><span class="dot" style="--c:var(${typeColor[n.type]})"></span>${esc(c)}</button>` : ""; }).join("")}</div>` : ""}
-    ${a.sources.length ? `<div class="lab">Documents</div><div>${a.sources.map((s) => docBtn(docById(s.id))).join(" · ")}</div>` : ""}
+    ${(a.warnings || []).map((w) => `<p class="warnline">${esc(w)}</p>`).join("")}
+    ${a.sources.length ? `<div class="lab">${brainId === "handbook" ? "Handbook pages cited" : "Documents"}</div><div>${a.sources.map((s) => docBtn(docById(s.id))).join(" · ")}</div>` : ""}
     <p class="num" style="margin-top:14px">Threadline gave Claude ${a.searched} notes from the map for this question, not the whole brain.</p>`;
 }
 $("qs").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) showAnswer(+b.dataset.i); });
@@ -507,7 +511,9 @@ function showReport() {
     <div class="panel box"><h3>Needs a human</h3>
       <p><span class="big">${r.review}</span>links are inferred or unclear. Confirm or correct them in the notes.</p>
       <p><span class="big">${r.dropped}</span>suggested link${r.dropped === 1 ? " was" : "s were"} thrown away: the quote wasn't in the document.</p>
-      ${r.flagged.length ? `<p><span class="big">${r.flagged.length}</span>document had hidden text removed: ${r.flagged.map(esc).join(", ")}.</p>` : ""}</div>`;
+      ${r.flagged.length ? `<p><span class="big">${r.flagged.length}</span>document had hidden text removed: ${r.flagged.map(esc).join(", ")}.</p>` : ""}</div>
+    ${r.handbook ? `<div class="panel box"><h3>Possibly out of date</h3><p class="num">Not edited for more than ${r.staleDays} days.</p><ul>${r.stale.map((p) => `<li>${docBtn(docById(p.id))} <span class="num">${p.lastEdited ? `last edited ${day(p.lastEdited)}` : "no date"}${p.owner ? ` · ${esc(p.owner)}` : ""}</span></li>`).join("") || "<li>None.</li>"}</ul></div>
+    <div class="panel box"><h3>Possible conflicts, need a human</h3><ul>${r.conflicts.map((c) => `<li>${nodeBtn(byId(c.id))}: ${c.pages.map((p) => `${esc(p.title)} says <b>${esc(p.value)}</b>`).join("; ")}</li>`).join("") || "<li>None.</li>"}</ul><p class="num">Threadline doesn't pick a winner. The page owners decide.</p></div>` : ""}`;
 }
 
 // ---------- brain switch ----------
@@ -543,7 +549,7 @@ function md(text){
   if (list) out.push("</ul>");
   return out.join("");
 }
-const order = ["business", "personal", "marketing"];
+const order = ["business", "personal", "handbook", "marketing"];
 const lenses = [...D.lenses].sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
 $("lens-list").innerHTML = lenses.map((l, i) => `<button role="tab" aria-selected="${i === 0}" data-i="${i}">${esc(l.name)}</button>`).join("");
 $("lens-list").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) showLens(+b.dataset.i); });

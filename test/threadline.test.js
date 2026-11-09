@@ -57,10 +57,11 @@ test("quotes match despite spacing, case, quote marks and markdown", () => {
 
 // --- lenses and inbox ---
 test("lenses load, the template is ignored, folders choose the lens", () => {
-  assert.deepEqual(lenses.map((l) => l.id), ["business", "marketing", "personal"]);
+  assert.deepEqual(lenses.map((l) => l.id), ["business", "handbook", "marketing", "personal"]);
   assert.equal(lensFor("clients/acme.md", lenses, "business").id, "business");
   assert.equal(lensFor("Learning/sql.md", lenses, "business").id, "personal");
   assert.equal(lensFor("random/x.md", lenses, "marketing").id, "marketing");
+  assert.equal(lensFor("notion/Expenses.md", lenses, "business").id, "handbook");
   assert.throws(() => parseLens("no header"), /header/);
 });
 

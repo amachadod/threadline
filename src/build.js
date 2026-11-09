@@ -79,7 +79,7 @@ export async function buildBrain({ root, config, extract, now = new Date(), log 
     writeVault(root, g, edits);
     mkdirSync(join(root, "brain/notes"), { recursive: true });
     writeFileSync(join(root, "brain/notes/Home.md"), renderHome(g));
-    writeFileSync(join(root, "brain/notes/REPORT.md"), renderReport(g, now.toISOString().slice(0, 10)));
+    writeFileSync(join(root, "brain/notes/REPORT.md"), renderReport(g, now.toISOString().slice(0, 10), config.staleDays ?? 180));
     writeFileSync(join(root, "brain/CLAUDE.md"), CLAUDE_GUIDE);
   }
   // Counts only. Never log document content: run logs on public repos are visible to anyone.

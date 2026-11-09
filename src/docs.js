@@ -3,6 +3,7 @@ import { readdirSync, readFileSync, statSync, existsSync } from "node:fs";
 import { join, relative, extname, basename, sep } from "node:path";
 import { createHash } from "node:crypto";
 import { removeHidden, redact, htmlToText } from "./text.js";
+import { pageMeta } from "./handbook.js";
 
 export const SUPPORTED = new Set([".md", ".markdown", ".txt", ".html", ".htm"]);
 
@@ -32,6 +33,7 @@ export function readDoc(root, path) {
     title: heading ? heading[1].trim() : basename(path, extname(path)),
     hash,
     text,
+    meta: pageMeta(text),
     flags: [
       ...(h.hidden ? [`Hidden text removed (${h.hidden})`] : []),
       ...(r.redacted ? [`Sensitive details redacted (${r.redacted})`] : []),
