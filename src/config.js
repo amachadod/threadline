@@ -20,6 +20,7 @@ export function getConfig(env = process.env) {
     dryRun: env.DRY_RUN === "true",
     force: env.FORCE_REBUILD === "true",
     maxChunk: Number(env.MAX_CHUNK_CHARS || 15000),
+    staleDays: Number(env.STALE_DAYS || 180),
     githubToken: env.GITHUB_TOKEN || "",
     githubRepo: env.GITHUB_REPOSITORY || "",
   };
