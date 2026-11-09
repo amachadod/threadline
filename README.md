@@ -8,7 +8,7 @@ Drop in briefs, call notes, emails or personal notes. Threadline has Claude read
 
 It works for your business (clients, people, projects, decisions, deadlines, budgets), your personal life (goals, learning, people, plans) or a marketing team (campaigns, channels, results). Each is a plain-English "lens" you can edit or copy.
 
-👉 **[Explore the live demo](https://amachadod.github.io/threadline/)**: two example brains, business and personal, built by the real code. Click through the map, open the notes and ask questions.
+👉 **[Explore the live demo](https://amachadod.github.io/threadline/)**: three example brains built by the real code: business, personal, and a fictional company handbook. Click through the map, open the notes and ask questions.
 
 *Portfolio project by Alberto Machado Domínguez. The people, companies and documents in the examples are fictional.*
 
@@ -74,8 +74,23 @@ Open the **repository folder** as a vault in Obsidian and every `[[link]]` works
 | [Business](lenses/business.md) | `business`, `clients`, `work` | People, organizations, projects, decisions, deadlines, budgets, risks, preferences |
 | [Personal](lenses/personal.md) | `personal`, `life`, `learning` | Goals, resources, people, ideas, plans, places, milestones, habits |
 | [Marketing](lenses/marketing.md) | `marketing`, `campaigns`, `brand` | Campaigns, channels, audiences, results, creatives, learnings, decisions |
+| [Handbook](lenses/handbook.md) | `handbook`, `notion`, `wiki`, `policies` | Policies, processes, rules with their limits, teams, tools, who to ask |
 
 For anything else (research, recruiting, a game's community), copy [`lenses/_template.md`](lenses/_template.md) and describe in plain English what to remember. Files starting with `_` are ignored.
+
+## Company handbook mode
+
+Threadline can also be the assistant for a company handbook, the kind of shared notes space many teams keep in Notion (a shared notes app). Put the exported pages in `inbox/handbook/` and three things are added on top of the normal brain:
+
+1. **Answers cite the page.** Every answer names the handbook pages it used. If the handbook doesn't cover the question, the answer is exactly *"I could not find this in the handbook."*, even if Claude tried to answer without citing anything.
+2. **Out-of-date pages are flagged.** Pages not edited for more than `STALE_DAYS` days (180 by default) are listed in the report, with their owner, and any answer that uses one says so.
+3. **Conflicts are flagged, not settled.** When two pages give a different value for the same rule (one says the home office budget is €500 a year, another says €300), the report lists it as *"possible conflict, needs a human"*, and answers that touch it warn you. Threadline never picks a winner.
+
+The demo's third brain is the handbook of **Northwind SaaS**, a fictional remote software company: 12 pages, two that contradict each other and two that are out of date.
+
+**Connecting a real Notion workspace.** In Notion, use *Export → Markdown & CSV* on the pages you want, unzip, and copy the `.md` files into `inbox/handbook/`. Threadline reads the "Owner" and "Last edited time" lines Notion puts under each title (a `---` header with `owner:` and `last_edited:` works too). There is no live Notion connection: you export again when pages change, and only changed pages are read again.
+
+**What is real and what is simulated:** the reading, checking, stale-page and conflict logic and the tests are real code. The company, its pages and the example Claude output in the demo are fictional. The handbook lens tells Claude not to store anything about a named employee's personal situation; keep HR records out of the handbook folder.
 
 ## Safeguards
 
@@ -102,8 +117,8 @@ You need [Node.js 20+](https://nodejs.org). There are no dependencies to install
 ```bash
 git clone https://github.com/amachadod/threadline.git
 cd threadline
-npm run demo   # builds the two example brains and asks them questions (no API key)
-npm test       # 21 tests: cleaning, redaction, validation, merging, rebuilds, your notes, asking, GitHub issues
+npm run demo   # builds the three example brains and asks them questions (no API key)
+npm test       # 26 tests: cleaning, redaction, validation, merging, rebuilds, your notes, asking, GitHub issues, handbook mode
 ```
 
 `npm run demo` prints where it wrote each example brain. Open that folder in Obsidian to explore it.
@@ -158,12 +173,13 @@ src/
   vault.js       writes the Obsidian notes and keeps your edits
   report.js      REPORT.md
   ask.js         finds notes on the map and answers from them
+  handbook.js    handbook mode: page owner and date, stale pages, conflicts, answers that cite pages
   build.js       the whole build
   github.js      answering questions from GitHub issues
 scripts/         build, ask, demo, build-demo, examples (fake Claude for the demo and tests)
-lenses/          business, personal, marketing, _template
+lenses/          business, personal, marketing, handbook, _template
 inbox/           your documents go here
-examples/        two fictional brains: documents, example Claude output, example answers
+examples/        three fictional brains: documents, example Claude output, example answers
 docs/            the demo page (GitHub Pages)
 test/            node:test suite
 .github/         build on every change; answer issues labelled "ask"
@@ -175,6 +191,7 @@ test/            node:test suite
 - The map is only as good as the reading. Inferred and unclear links need a human eye; that's why the report lists them.
 - Name matching is careful but not perfect. If two notes are the same thing, add the other name as an alias in your lens instructions or confirm the right one.
 - PDFs and Word files aren't read yet. Save them as text or Markdown first.
+- Conflict detection compares the values Claude extracts for the same rule. Two pages that disagree in wording only, without a clear value, may not be caught.
 - Very large brains (thousands of notes) would need smarter search than word matching. Threadline is built for one person's or one team's documents.
 
 ## Tech
@@ -186,7 +203,11 @@ Node.js 20+, no dependencies. Claude Messages API with forced tool use, a small 
 - [**Plano**](https://github.com/amachadod/plano): paid media budget forecaster
 - [**Minuta**](https://github.com/amachadod/minuta): turns calls into tasks for the right team
 - [**Posta**](https://github.com/amachadod/posta): turns email into a morning briefing, tasks and drafts
+- [**Signalpost**](https://github.com/amachadod/signalpost): plans, writes, checks and schedules social posts
+- [**AdsDetective**](https://github.com/amachadod/adsdetective): finds which ads keep running in Meta's Ad Library
 - **Threadline**: remembers everything they produce, and everything else you give it
+
+See how it fits together: [https://amachadod.github.io/ai-front-desk/](https://amachadod.github.io/ai-front-desk/)
 
 ## License
 
