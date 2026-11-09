@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { getConfig } from "../src/config.js";
 import { buildBrain } from "../src/build.js";
 import { ask } from "../src/ask.js";
+import { askHandbook } from "../src/handbook.js";
 import { analyse } from "../src/report.js";
 import { degree } from "../src/graph.js";
 import { renderNote } from "../src/vault.js";
@@ -25,8 +26,8 @@ for (const brain of BRAINS) {
   const a = analyse(g, today);
   const qa = [];
   for (const q of answers) {
-    const r = await ask(g, q.question, fakeAnswer(answers));
-    qa.push({ question: q.question, answer: r.answer, citations: r.citations, sources: r.sources, unknown: r.unknown, grounded: r.grounded, searched: r.notes.length });
+    const r = brain === "handbook" ? await askHandbook(g, q.question, fakeAnswer(answers), { today, maxDays: 180 }) : await ask(g, q.question, fakeAnswer(answers));
+    qa.push({ question: q.question, answer: r.answer, citations: r.citations, sources: r.sources, unknown: r.unknown, grounded: r.grounded, searched: r.notes.length, warnings: r.warnings || [] });
   }
   out.brains[brain] = {
     nodes: Object.values(g.nodes).map((n) => ({ id: n.id, name: n.name, type: n.type, summary: n.summary, date: n.date, value: n.value, aliases: n.aliases, sources: n.sources, degree: deg[n.id] || 0, markdown: renderNote(g, n) })),
@@ -36,7 +37,7 @@ for (const brain of BRAINS) {
       original: g.docs[d.id].flags.length ? readFileSync(join(root, "inbox", d.id), "utf8") : null,
       ...g.docs[d.id],
     })),
-    report: { hubs: a.hubs.map((n) => ({ id: n.id, name: n.name, type: n.type, links: n.links })), upcoming: a.upcoming.map((n) => ({ id: n.id, name: n.name, type: n.type, date: n.date })), review: a.review.length, flagged: a.flagged.map((d) => d.title), dropped: a.dropped, counts: a.counts },
+    report: { hubs: a.hubs.map((n) => ({ id: n.id, name: n.name, type: n.type, links: n.links })), upcoming: a.upcoming.map((n) => ({ id: n.id, name: n.name, type: n.type, date: n.date })), review: a.review.length, flagged: a.flagged.map((d) => d.title), dropped: a.dropped, counts: a.counts, handbook: a.handbook, stale: a.stale, conflicts: a.conflicts, staleDays: a.staleDays },
     answers: qa,
   };
 }

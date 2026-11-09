@@ -1,4 +1,4 @@
-// Runs the example brains (examples/business, examples/personal) through the real Threadline code,
+// Runs the example brains (examples/business, examples/personal, examples/handbook) through the real Threadline code,
 // with a fake Claude that returns the saved example answers. No API key needed.
 import { readFileSync, mkdtempSync, cpSync } from "node:fs";
 import { join } from "node:path";
@@ -7,7 +7,7 @@ import { tmpdir } from "node:os";
 const here = new URL("../", import.meta.url).pathname;
 const read = (p) => JSON.parse(readFileSync(join(here, p), "utf8"));
 
-export const BRAINS = ["business", "personal"];
+export const BRAINS = ["business", "personal", "handbook"];
 export const loadExample = (brain) => ({
   extractions: read(`examples/${brain}/extractions.json`),
   answers: read(`examples/${brain}/answers.json`).questions,
